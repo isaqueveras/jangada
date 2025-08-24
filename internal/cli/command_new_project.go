@@ -82,8 +82,8 @@ func (jang *Jangada) createRootFiles() {
 	log := color.New()
 	log.Add(color.Bold, color.FgHiBlue).Print("\nInstalling the project...\n\n")
 
-	for name, tmpl := range tmpl.GetTemplateForNewProject() {
-		jang.createFile(name, tmpl.String())
+	for name, tmpl := range tmpl.GetTemplateForNewApp() {
+		jang.createFile(name, tmpl)
 	}
 }
 
