@@ -1,6 +1,6 @@
 package newapp
 
-const tmplCoreCore TmplNewProject = `package core
+const tmplCoreCore string = `package core
 
 import (
 	"log/slog"

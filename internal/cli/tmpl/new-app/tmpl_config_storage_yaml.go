@@ -1,6 +1,6 @@
 package newapp
 
-const tmplConfigStorageYaml TmplNewProject = `development:
+const tmplConfigStorageYaml string = `development:
   service: Disk
   root: tmp/dev/storage
 

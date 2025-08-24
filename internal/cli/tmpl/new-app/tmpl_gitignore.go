@@ -1,6 +1,6 @@
 package newapp
 
-const tmplGitIgnore TmplNewProject = `db/*.db
+const tmplGitIgnore string = `db/*.db
 db/*.db-*
 
 bin/
