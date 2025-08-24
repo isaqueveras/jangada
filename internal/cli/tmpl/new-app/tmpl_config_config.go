@@ -2,9 +2,7 @@ package newapp
 
 import "strings"
 
-var tmplConfigConfig = TmplNewProject(
-	strings.ReplaceAll(tmplConfigConfigTemp, "'", "`"),
-)
+var tmplConfigConfig = strings.ReplaceAll(tmplConfigConfigTemp, "'", "`")
 
 const tmplConfigConfigTemp = `package config
 

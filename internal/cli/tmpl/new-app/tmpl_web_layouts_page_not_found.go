@@ -1,6 +1,6 @@
 package newapp
 
-const tmplWebLayoutsNotFound TmplNewProject = `package layouts
+const tmplWebLayoutsNotFound string = `package layouts
 
 templ NotFound() {
   @Page("Page Not Found"){

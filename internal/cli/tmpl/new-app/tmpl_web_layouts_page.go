@@ -1,6 +1,6 @@
 package newapp
 
-const tmplWebLayoutsPage TmplNewProject = `package layouts
+const tmplWebLayoutsPage string = `package layouts
 
 templ Page(title string) {
   <!DOCTYPE html>

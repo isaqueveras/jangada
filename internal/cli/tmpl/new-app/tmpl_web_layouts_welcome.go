@@ -1,6 +1,6 @@
 package newapp
 
-const tmplWebLayoutsWelcome TmplNewProject = `package layouts
+const tmplWebLayoutsWelcome string = `package layouts
 
 import "time"
 
