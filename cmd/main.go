@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/isaqueveras/jangada/internal/cli"
+	cli "github.com/isaqueveras/jangada/internal"
 )
 
 func main() {
