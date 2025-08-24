@@ -1,6 +1,6 @@
-package tmpl
+package template
 
-import newapp "github.com/isaqueveras/jangada/internal/cli/tmpl/new-app"
+import newapp "github.com/isaqueveras/jangada/internal/template/new-app"
 
 // GetTemplateForNewApp returns a map of templates for new app
 func GetTemplateForNewApp() map[string]string { return newapp.Template }

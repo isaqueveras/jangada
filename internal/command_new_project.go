@@ -9,7 +9,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/isaqueveras/jangada/internal/cli/tmpl"
+	temp "github.com/isaqueveras/jangada/internal/template"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -82,20 +82,19 @@ func (jang *Jangada) createRootFiles() {
 	log := color.New()
 	log.Add(color.Bold, color.FgHiBlue).Print("\nInstalling the project...\n\n")
 
-	for name, tmpl := range tmpl.GetTemplateForNewApp() {
+	for name, tmpl := range temp.GetTemplateForNewApp() {
 		jang.createFile(name, tmpl)
 	}
 }
 
 func (jang *Jangada) createFile(name, tmpl string) {
+	log := color.New()
 	dir := fmt.Sprintf("%s/%s", jang.directoryPath, filepath.Dir(name))
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			panic(err)
 		}
 	}
-
-	log := color.New()
 
 	pathFile := fmt.Sprintf("%s/%s", jang.directoryPath, name)
 	if _, err := os.Stat(pathFile); !os.IsNotExist(err) {
