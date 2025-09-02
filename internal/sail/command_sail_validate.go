@@ -3,6 +3,7 @@ package sail
 
 import (
 	"log"
+	"os"
 	"strings"
 )
 
@@ -25,6 +26,16 @@ func newSailInterfaceValidate(args ...string) (string, string, InterfaceLayer) {
 	}
 
 	entity := folderParts[len(folderParts)-1]
+	if entity == "" {
+		log.Fatal("You must provide a entity name for the bounded context.")
+	}
+
+	url, ok := strings.CutSuffix(folder, entity)
+	if !ok {
+		log.Fatal("Error to parse folder and entity names.")
+	}
+
+	folder = strings.Trim(url, string(os.PathSeparator))
 
 	return folder, entity, layer
 }

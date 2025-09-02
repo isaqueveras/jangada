@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
+
+	"github.com/spf13/cobra"
 )
 
 // SailInterface defines the Sail interface structure.
@@ -16,12 +18,10 @@ type SailInterface struct {
 }
 
 // Execute is the handler for the 'sail interface' command.
-func (s *SailInterface) Execute(pathDir string, args []string) {
+func (s *SailInterface) Execute(_ *cobra.Command, args []string) {
 	folder, entity, layer := newSailInterfaceValidate(args...)
 	mapperCreateLayerInterface[layer](&SailInterface{
-		folder:  folder,
-		pathDir: pathDir,
-		entity:  entity,
+		folder: folder, entity: entity, pathDir: s.pathDir,
 	})
 }
 
@@ -64,13 +64,7 @@ func createPath(key string, data map[string]any) (content string, err error) {
 }
 
 func createDir(path string) error {
-	dir := filepath.Dir(path)
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		if err := os.MkdirAll(dir, 0755); err != nil {
-			return err
-		}
-	}
-	return nil
+	return os.MkdirAll(filepath.Dir(path), 0755)
 }
 
 func createFile(path, content string, data map[string]any) error {

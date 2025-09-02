@@ -12,12 +12,17 @@ type Sail struct {
 }
 
 // NewCommand creates a new instance of the Sail command.
-func NewCommand() *Sail {
-	return &Sail{}
+func NewCommand(pathDir string) *Sail {
+	return &Sail{
+		PathDir: pathDir,
+		CommandInterface: SailInterface{
+			pathDir: pathDir,
+		},
+	}
 }
 
 // Execute represents the 'sail' command.
-func (s *Sail) Execute(pathDir string) *cobra.Command {
+func (s *Sail) Execute() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sail",
 		Short: "Create layer for bounded context",
@@ -28,9 +33,7 @@ func (s *Sail) Execute(pathDir string) *cobra.Command {
 		Short:   "Create interface for bounded context",
 		Args:    cobra.RangeArgs(1, 2),
 		Example: exampleCreateInterfaceText,
-		Run: func(_ *cobra.Command, args []string) {
-			s.CommandInterface.Execute(pathDir, args)
-		},
+		Run:     s.CommandInterface.Execute,
 	})
 
 	return cmd

@@ -34,7 +34,7 @@ func New() error {
 	}
 
 	jangada.AddCommand(jang.commandNewProject())
-	jangada.AddCommand(sail.NewCommand().Execute(jang.GetDirectoryPath()))
+	jangada.AddCommand(sail.NewCommand(jang.GetDirectoryPath()).Execute())
 
 	return jangada.Execute()
 }
