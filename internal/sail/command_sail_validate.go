@@ -7,10 +7,10 @@ import (
 	"strings"
 )
 
-func newSailInterfaceValidate(args ...string) (string, string, InterfaceLayer) {
-	var layer = WebInterfaceLayer
+func newSailTransportValidate(args ...string) (string, string, TransportLayer) {
+	var layer = WebTransportLayer
 	if len(args[1:]) != 0 {
-		layer = InterfaceLayer(args[1:][0])
+		layer = TransportLayer(args[1:][0])
 	}
 
 	folder := args[0]

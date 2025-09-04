@@ -1,13 +1,13 @@
 // Package sail provides commands to create layers for a bounded context.
 package sail
 
-// exampleCreateInterfaceText defines the example text for the 'sail interface' command.
-const exampleCreateInterfaceText = `
-# Create web interface layer structure for the "user" bounded context
-jangada sail interface user web
+// exampleCreateTransportText defines the example text for the 'sail transport' command.
+const exampleCreateTransportText = `
+# Create web transport layer structure for the "user" bounded context
+jangada sail transport user/user web
 
-# Create rest interface layer structure for the "user" bounded context
-jangada sail interface user rest
+# Create rest transport layer structure for the "user" bounded context
+jangada sail transport user/user rest
 
-# Create gRPC interface layer structure for the "user" bounded context
-jangada sail interface user grpc`
+# Create gRPC transport layer structure for the "user" bounded context
+jangada sail transport user/user grpc`

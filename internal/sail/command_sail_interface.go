@@ -14,23 +14,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// SailInterface defines the Sail interface structure.
-type SailInterface struct {
+// SailTransport defines the Sail transport structure.
+type SailTransport struct {
 	pathDir, folder, entity string
 }
 
-// Execute is the handler for the 'sail interface' command.
-func (s *SailInterface) Execute(_ *cobra.Command, args []string) {
-	folder, entity, layer := newSailInterfaceValidate(args...)
-	mapperCreateLayerInterface[layer](&SailInterface{
+// Execute is the handler for the 'sail transport' command.
+func (s *SailTransport) Execute(_ *cobra.Command, args []string) {
+	folder, entity, layer := newSailTransportValidate(args...)
+	mapperCreateLayerTransport[layer](&SailTransport{
 		folder: folder, entity: entity, pathDir: s.pathDir,
 	})
 }
 
-// createWebInterface generates the web interface layer structure.
-func createWebInterface(app *SailInterface) {
+// createWebTransport generates the web transport layer structure.
+func createWebTransport(app *SailTransport) {
 	log := color.New()
-	log.Add(color.Bold, color.FgHiBlue).Print("Creating web interface layer structure...\n\n")
+	log.Add(color.Bold, color.FgHiBlue).Print("Creating web transport layer structure...\n\n")
 
 	data := map[string]any{
 		"folder": app.folder,
@@ -60,7 +60,7 @@ func createWebInterface(app *SailInterface) {
 		log.Add(color.Reset, color.FgHiWhite).Printf("%s\n", pathFile)
 	}
 
-	log.Add(color.Reset, color.Bold, color.FgHiBlue).Print("\nWeb interface layer structure created successfully!\n\n")
+	log.Add(color.Reset, color.Bold, color.FgHiBlue).Print("\nWeb transport layer structure created successfully!\n\n")
 }
 
 func createPath(key string, data map[string]any) (content string, err error) {
@@ -100,28 +100,23 @@ func createFile(path, content string, data map[string]any) error {
 	return nil
 }
 
-// createRestInterface generates the rest interface layer structure.
-func createRestInterface(app *SailInterface) {
-	log.Fatal("rest interface layer not implemented yet")
+// createRestTransport generates the rest transport layer structure.
+func createRestTransport(app *SailTransport) {
+	log.Fatal("rest transport layer not implemented yet")
 }
 
-func createGRPCInterface(app *SailInterface) {
-	log.Fatal("gRPC interface layer not implemented yet")
+func createGRPCTransport(app *SailTransport) {
+	log.Fatal("gRPC transport layer not implemented yet")
 }
 
-func createGraphQLInterface(app *SailInterface) {
-	log.Fatal("GraphQL interface layer not implemented yet")
+func createGraphQLTransport(app *SailTransport) {
+	log.Fatal("GraphQL transport layer not implemented yet")
 }
 
-func createWebhookInterface(app *SailInterface) {
-	log.Fatal("Webhook interface layer not implemented yet")
+func createWebhookTransport(app *SailTransport) {
+	log.Fatal("Webhook transport layer not implemented yet")
 }
 
-func createAllInterface(app *SailInterface) {
-	log.Fatal("All interface layer not implemented yet")
+func createAllTransport(app *SailTransport) {
+	log.Fatal("All transport layer not implemented yet")
 }
-
-// color.New(color.Bold, color.FgHiBlue).Println("Creating web interface layer structure...")
-// color.Black(" - " + folderName + "/interface/web/handler.go")
-// color.Black(" - " + folderName + "/interface/web/middleware.go")
-// color.Black(" - " + folderName + "/interface/web/router.go\n\n")

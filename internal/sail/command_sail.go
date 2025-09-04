@@ -8,14 +8,14 @@ import (
 // Sail defines the Sail command structure.
 type Sail struct {
 	PathDir          string
-	CommandInterface SailInterface
+	CommandTransport SailTransport
 }
 
 // NewCommand creates a new instance of the Sail command.
 func NewCommand(pathDir string) *Sail {
 	return &Sail{
 		PathDir: pathDir,
-		CommandInterface: SailInterface{
+		CommandTransport: SailTransport{
 			pathDir: pathDir,
 		},
 	}
@@ -29,11 +29,11 @@ func (s *Sail) Execute() *cobra.Command {
 	}
 
 	cmd.AddCommand(&cobra.Command{
-		Use:     "interface",
-		Short:   "Create interface for bounded context",
+		Use:     "transport",
+		Short:   "Create transport layer",
 		Args:    cobra.RangeArgs(1, 2),
-		Example: exampleCreateInterfaceText,
-		Run:     s.CommandInterface.Execute,
+		Example: exampleCreateTransportText,
+		Run:     s.CommandTransport.Execute,
 	})
 
 	return cmd

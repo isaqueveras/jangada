@@ -1,33 +1,33 @@
 // Package sail provides commands to create layers for a bounded context.
 package sail
 
-// InterfaceLayer defines the type for interface layers.
-type InterfaceLayer string
+// TransportLayer defines the type for transport layers.
+type TransportLayer string
 
 const (
-	// AllInterfaceLayer defines all layers
-	AllInterfaceLayer InterfaceLayer = "all"
-	// WebInterfaceLayer defines the web layer
-	WebInterfaceLayer InterfaceLayer = "web"
-	// RestInterfaceLayer defines the http layer
-	RestInterfaceLayer InterfaceLayer = "http"
-	// GRPCInterfaceLayer defines the grpc layer
-	GRPCInterfaceLayer InterfaceLayer = "grpc"
+	// AllTransportLayer defines all layers
+	AllTransportLayer TransportLayer = "all"
+	// WebTransportLayer defines the web layer
+	WebTransportLayer TransportLayer = "web"
+	// RestTransportLayer defines the http layer
+	RestTransportLayer TransportLayer = "http"
+	// GRPCTransportLayer defines the grpc layer
+	GRPCTransportLayer TransportLayer = "grpc"
 	// GRPCLayer defines the graphql layer
-	GraphQLInterfaceLayer InterfaceLayer = "graphql"
-	// WebhookInterfaceLayer defines the webhook layer
-	WebhookInterfaceLayer InterfaceLayer = "webhook"
+	GraphQLTransportLayer TransportLayer = "graphql"
+	// WebhookTransportLayer defines the webhook layer
+	WebhookTransportLayer TransportLayer = "webhook"
 )
 
-// TypeFuncCreateLayerInterface defines a function type for creating interface layers.
-type TypeFuncCreateLayerInterface func(*SailInterface)
+// TypeFuncCreateLayerTransport defines a function type for creating transport layers.
+type TypeFuncCreateLayerTransport func(*SailTransport)
 
-// mapperCreateLayerInterface maps layers to their corresponding creation functions.
-var mapperCreateLayerInterface = map[InterfaceLayer]TypeFuncCreateLayerInterface{
-	WebInterfaceLayer:     createWebInterface,
-	RestInterfaceLayer:    createRestInterface,
-	GRPCInterfaceLayer:    createGRPCInterface,
-	GraphQLInterfaceLayer: createGraphQLInterface,
-	WebhookInterfaceLayer: createWebhookInterface,
-	AllInterfaceLayer:     createAllInterface,
+// mapperCreateLayerTransport maps layers to their corresponding creation functions.
+var mapperCreateLayerTransport = map[TransportLayer]TypeFuncCreateLayerTransport{
+	WebTransportLayer:     createWebTransport,
+	RestTransportLayer:    createRestTransport,
+	GRPCTransportLayer:    createGRPCTransport,
+	GraphQLTransportLayer: createGraphQLTransport,
+	WebhookTransportLayer: createWebhookTransport,
+	AllTransportLayer:     createAllTransport,
 }
