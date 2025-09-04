@@ -8,7 +8,9 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
+	"time"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -27,26 +29,38 @@ func (s *SailInterface) Execute(_ *cobra.Command, args []string) {
 
 // createWebInterface generates the web interface layer structure.
 func createWebInterface(app *SailInterface) {
-	for path, content := range TemplateMapInterface {
-		data := map[string]any{
-			"folder": app.folder,
-			"entity": app.entity,
-		}
+	log := color.New()
+	log.Add(color.Bold, color.FgHiBlue).Print("Creating web interface layer structure...\n\n")
 
-		pathFile, err := createPath(path, data)
-		if err != nil {
-			log.Fatal("Error create path for web interface layer files")
-		}
-
-		pathFile = fmt.Sprintf("%s%s", app.pathDir, pathFile)
-		if err := createDir(pathFile); err != nil {
-			log.Fatal("Error creating directory for web interface layer files: ", err)
-		}
-
-		if err = createFile(pathFile, content, data); err != nil {
-			log.Fatal("Error creating web interface layer files: ", err)
-		}
+	data := map[string]any{
+		"folder": app.folder,
+		"entity": app.entity,
+		"layer":  "web",
 	}
+
+	for _, in := range TemplateTransport {
+		time.Sleep(time.Second / 10)
+
+		pathFile, err := createPath(in.Path, data)
+		if err != nil {
+			panic(err)
+		}
+
+		pathFullFile := fmt.Sprintf("%s%s", app.pathDir, pathFile)
+		if err := createDir(pathFullFile); err != nil {
+			panic(err)
+		}
+
+		if err = createFile(pathFullFile, in.Content, data); err != nil {
+			panic(err)
+		}
+
+		log := color.New()
+		log.Add(color.Reset, color.FgHiGreen, color.Bold).Print("\tcreate\t")
+		log.Add(color.Reset, color.FgHiWhite).Printf("%s\n", pathFile)
+	}
+
+	log.Add(color.Reset, color.Bold, color.FgHiBlue).Print("\nWeb interface layer structure created successfully!\n\n")
 }
 
 func createPath(key string, data map[string]any) (content string, err error) {
