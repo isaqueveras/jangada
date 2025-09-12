@@ -3,7 +3,6 @@ package sail
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -11,19 +10,39 @@ import (
 	"time"
 
 	"github.com/fatih/color"
+	cli "github.com/isaqueveras/jangada/internal"
 	"github.com/spf13/cobra"
 )
 
 // SailTransport defines the Sail transport structure.
 type SailTransport struct {
-	pathDir, folder, entity string
+	pathDir, folder, entity, module string
+}
+
+// transportCommand ...
+func transportCommand() *cobra.Command {
+	cmd := &SailTransport{
+		pathDir: cli.GetDirectoryPath(),
+		module:  cli.GetModuleName(),
+	}
+
+	return &cobra.Command{
+		Use:     "transport",
+		Short:   "Create transport layer",
+		Args:    cobra.RangeArgs(1, 2),
+		Example: exampleCreateTransportText,
+		Run:     cmd.Execute,
+	}
 }
 
 // Execute is the handler for the 'sail transport' command.
 func (s *SailTransport) Execute(_ *cobra.Command, args []string) {
 	folder, entity, layer := newSailTransportValidate(args...)
 	mapperCreateLayerTransport[layer](&SailTransport{
-		folder: folder, entity: entity, pathDir: s.pathDir,
+		folder:  folder,
+		entity:  entity,
+		pathDir: s.pathDir,
+		module:  s.module,
 	})
 }
 
@@ -35,10 +54,11 @@ func createWebTransport(app *SailTransport) {
 	data := map[string]any{
 		"folder": app.folder,
 		"entity": app.entity,
-		"layer":  "web",
+		"module": cli.GetModuleName(),
+		"layer":  WebTransportLayer,
 	}
 
-	for _, in := range TemplateTransport {
+	for _, in := range WebTransportTemplate {
 		time.Sleep(time.Second / 10)
 
 		pathFile, err := createPath(in.Path, data)
@@ -46,12 +66,11 @@ func createWebTransport(app *SailTransport) {
 			panic(err)
 		}
 
-		pathFullFile := fmt.Sprintf("%s%s", app.pathDir, pathFile)
-		if err := createDir(pathFullFile); err != nil {
+		if err := createDir(pathFile); err != nil {
 			panic(err)
 		}
 
-		if err = createFile(pathFullFile, in.Content, data); err != nil {
+		if err = createFile(pathFile, in.Content, data); err != nil {
 			panic(err)
 		}
 
