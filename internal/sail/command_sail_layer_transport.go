@@ -7,7 +7,6 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
-	"time"
 
 	"github.com/fatih/color"
 	cli "github.com/isaqueveras/jangada/internal"
@@ -46,21 +45,26 @@ func (s *SailTransport) Execute(_ *cobra.Command, args []string) {
 	})
 }
 
+type webTransportTemplateData struct {
+	Folder string
+	Entity string
+	Module string
+	Layer  TransportLayer
+}
+
 // createWebTransport generates the web transport layer structure.
 func createWebTransport(app *SailTransport) {
 	log := color.New()
 	log.Add(color.Bold, color.FgHiBlue).Print("Creating web transport layer structure...\n\n")
 
-	data := map[string]any{
-		"folder": app.folder,
-		"entity": app.entity,
-		"module": cli.GetModuleName(),
-		"layer":  WebTransportLayer,
+	data := &webTransportTemplateData{
+		Folder: app.folder,
+		Entity: app.entity,
+		Module: cli.GetModuleName(),
+		Layer:  WebTransportLayer,
 	}
 
 	for _, in := range WebTransportTemplate {
-		time.Sleep(time.Second / 10)
-
 		pathFile, err := createPath(in.Path, data)
 		if err != nil {
 			panic(err)
@@ -70,6 +74,7 @@ func createWebTransport(app *SailTransport) {
 			panic(err)
 		}
 
+		data.Entity = cli.Capitalize(app.entity)
 		if err = createFile(pathFile, in.Content, data); err != nil {
 			panic(err)
 		}
@@ -82,14 +87,14 @@ func createWebTransport(app *SailTransport) {
 	log.Add(color.Reset, color.Bold, color.FgHiBlue).Print("\nWeb transport layer structure created successfully!\n\n")
 }
 
-func createPath(key string, data map[string]any) (content string, err error) {
+func createPath(key string, data *webTransportTemplateData) (content string, err error) {
 	templ, err := template.New("path").Parse(key)
 	if err != nil {
 		return "", err
 	}
 
 	var buf bytes.Buffer
-	if err := templ.Execute(&buf, data); err != nil {
+	if err := templ.Execute(&buf, &data); err != nil {
 		return "", err
 	}
 
@@ -100,7 +105,7 @@ func createDir(path string) error {
 	return os.MkdirAll(filepath.Dir(path), 0755)
 }
 
-func createFile(path, content string, data map[string]any) error {
+func createFile(path, content string, data *webTransportTemplateData) error {
 	file, err := os.Create(path)
 	if err != nil {
 		return err
@@ -112,7 +117,7 @@ func createFile(path, content string, data map[string]any) error {
 		return err
 	}
 
-	if err := t.Execute(file, data); err != nil {
+	if err := t.Execute(file, &data); err != nil {
 		return err
 	}
 

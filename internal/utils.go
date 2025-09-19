@@ -30,3 +30,18 @@ func RemoveLastSegment(value string) string {
 	}
 	return value
 }
+
+func GetEnv(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
+}
+
+// Capitalize capitalizes the first letter of a string
+func Capitalize(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	return strings.ToUpper(s[:1]) + s[1:]
+}

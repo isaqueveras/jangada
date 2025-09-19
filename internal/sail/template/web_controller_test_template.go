@@ -4,8 +4,8 @@ const WebControllerTest = `package controller
 
 import "testing"
 
-// Test{{ .entity }}Controller ...
-func Test{{ .entity }}Controller(t *testing.T) {
+// Test{{ .Entity }}Controller ...
+func Test{{ .Entity }}Controller(t *testing.T) {
 	t.Run("GetByID", func(t *testing.T) {
 		t.Fail()
 	})

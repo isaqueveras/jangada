@@ -11,17 +11,17 @@ type Template struct {
 
 // WebTransportTemplate holds templates for generating transport layer files
 var WebTransportTemplate = []Template{
-	{"internal/transport/{{ .layer }}/{{ .folder }}/controller/{{ .entity }}_controller.go", template.WebController},
-	// {"internal/transport/{{ .layer }}/{{ .folder }}/controller/{{ .entity }}_controller_test.go", template.WebControllerTest},
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/controller/{{ .Entity }}_controller.go", template.WebController},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/controller/{{ .Entity }}_controller_test.go", template.WebControllerTest},
 
-	{"internal/transport/{{ .layer }}/{{ .folder }}/mapper/{{ .entity }}_mapper.go", `package mapper`},
-	// {"internal/transport/{{ .layer }}/{{ .folder }}/mapper/{{ .entity }}_mapper_test.go", `package mapper`},
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/mapper/{{ .Entity }}_mapper.go", `package mapper`},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/mapper/{{ .Entity }}_mapper_test.go", `package mapper`},
 
-	{"internal/transport/{{ .layer }}/{{ .folder }}/response/{{ .entity }}_response.go", `package response`},
-	// {"internal/transport/{{ .layer }}/{{ .folder }}/response/{{ .entity }}_response_test.go", `package response`},
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/response/{{ .Entity }}_response.go", `package response`},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/response/{{ .Entity }}_response_test.go", `package response`},
 
-	{"internal/transport/{{ .layer }}/{{ .folder }}/request/{{ .entity }}_request.go", `package request`},
-	// {"internal/transport/{{ .layer }}/{{ .folder }}/request/{{ .entity }}_request_test.go", `package request`},
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/request/{{ .Entity }}_request.go", `package request`},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/request/{{ .Entity }}_request_test.go", `package request`},
 
-	{"internal/transport/{{ .layer }}/{{ .folder }}/view/{{ .entity }}_view.go", `package view`},
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/view/{{ .Entity }}_view.go", `package view`},
 }
