@@ -2,47 +2,136 @@
 package template
 
 // WebController is a template for a web controller
-const WebController = `package controller
+const WebController = `// Package controller defines a web controller for {{ .Entity }}Controller 
+package controller
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-	"{{ .Module }}/internal/application/{{ .Folder }}/command"
+	"{{ .Module }}/core"
 	"{{ .Module }}/internal/application/{{ .Folder }}/orchestrator"
-	"jangada/core"
+	"{{ .Module }}/internal/transport/web/{{ .Folder }}/request"
 )
 
-// {{ .Entity }}Controller ...
+// {{ .Entity }}Controller is a controller for {{ ToLower .Entity }}
 type {{ .Entity }}Controller struct {
 	orchestrator orchestrator.{{ .Entity }}Orchestrator
 }
 
-// New{{ .Entity }}Controller create a new {{ .Entity }}Controller instance and register routes
-func New{{ .Entity }}Controller(core *core.Core, app orchestrator.{{ .Entity }}Orchestrator) *{{ .Entity }}Controller {
+// New{{ .Entity }}Controller register routes for {{ ToLower .Entity }}
+func New{{ .Entity }}Controller(core *core.Core, app orchestrator.{{ .Entity }}Orchestrator) {
 	ctrl := &{{ .Entity }}Controller{
 		orchestrator: app,
 	}
 
+	// Create a new group of resource. 
 	r := core.Router().Group("/v1/{{ .Folder }}")
-	r.GET(":id", ctrl.GetByID)
 
-	return ctrl
+	// Display the specified resource.
+	r.GET("{{ ToLower .Entity }}/:id", ctrl.GetByID)
+
+	// Display a listing of the resource.
+	r.GET("{{ ToLower .Entity }}", ctrl.GetAll)
+
+	// Store a newly created resource.
+	r.POST("{{ ToLower .Entity }}", ctrl.Create)
+
+	// Update the specified resource.
+	r.PUT("{{ ToLower .Entity }}/:id", ctrl.Update)
+
+	// Remove the specified resource.
+	r.DELETE("{{ ToLower .Entity }}/:id", ctrl.Delete)
 }
 
-// GetByID define a method to get by id
+// GetByID define a method to get a resource by id
 func (c *{{ .Entity }}Controller) GetByID(ctx *gin.Context) {
-	params := command.{{ .Entity }}Params{
-		ID: ctx.Param("id"),
+	params := new(request.{{ .Entity }}Params)
+	if err := ctx.ShouldBindUri(params); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
 	}
 
-	data, err := c.orchestrator.GetByID(ctx, params)
+	data, err := c.orchestrator.GetByID(ctx, params.ToCommand())
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+		
+	// mapper.To{{ .Entity }}Response(data)
+	ctx.JSON(http.StatusOK, data)
+}
+
+// GetAll define a method to get all resources
+func (c *{{ .Entity }}Controller) GetAll(ctx *gin.Context) {
+	params := new(request.SettingFilters)
+	if err := ctx.ShouldBindQuery(params); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	data, err := c.orchestrator.GetAll(ctx, params.ToCommand())
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+		
+	ctx.JSON(http.StatusOK, data)
+}
+
+// Create define a method to create a resource
+func (c *{{ .Entity }}Controller) Create(ctx *gin.Context) {
+	params := new(request.{{ .Entity }}Params)
+	if err := ctx.ShouldBindJSON(params); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	data, err := c.orchestrator.Create(ctx, params.ToCommand())
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	ctx.JSON(200, data)
+	ctx.JSON(http.StatusCreated, data)
+}
+
+// Update define a method to update a resource
+func (c *{{ .Entity }}Controller) Update(ctx *gin.Context) {
+	params := new(request.{{ .Entity }}UpdateParams)
+	if err := ctx.ShouldBindUri(params); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	
+	if err := ctx.ShouldBindJSON(params); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	data, err := c.orchestrator.Update(ctx, params.ToCommand())
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusNoContent, data)
+}
+
+// Delete define a method to delete a resource
+func (c *{{ .Entity }}Controller) Delete(ctx *gin.Context) {
+	params := new(request.{{ .Entity }}Params)
+	if err := ctx.ShouldBindUri(params); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	if err := c.orchestrator.Delete(ctx, params.ToCommand()); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusNoContent, nil)
 }
 `
