@@ -1,6 +1,7 @@
 package newapp
 
-const tmplCoreCore string = `package core
+const tmplCoreCore string = `// Package core defines the core framework
+package core
 
 import (
 	"log/slog"
