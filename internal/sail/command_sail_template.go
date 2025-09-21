@@ -11,17 +11,15 @@ type Template struct {
 
 // WebTransportTemplate holds templates for generating transport layer files
 var WebTransportTemplate = []Template{
-	{"internal/transport/{{ .Layer }}/{{ .Folder }}/controller/{{ .Entity }}_controller.go", template.WebController},
-	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/controller/{{ .Entity }}_controller_test.go", template.WebControllerTest},
+	{"internal/transport/handler.go", template.HandlerController},
+	{"internal/transport/web/handler.go", template.WebHandlerController},
 
-	{"internal/transport/{{ .Layer }}/{{ .Folder }}/mapper/{{ .Entity }}_mapper.go", `package mapper`},
-	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/mapper/{{ .Entity }}_mapper_test.go", `package mapper`},
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/controller/{{ ToLower .Entity }}_controller.go", template.WebController},
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/request/{{ ToLower .Entity }}_request.go", template.WebRequest},
 
-	{"internal/transport/{{ .Layer }}/{{ .Folder }}/response/{{ .Entity }}_response.go", `package response`},
-	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/response/{{ .Entity }}_response_test.go", `package response`},
+	{"internal/application/{{ .Folder }}/orchestrator/{{ ToLower .Entity }}_orchestrator.go", template.ApplicationOrchestrator},
 
-	{"internal/transport/{{ .Layer }}/{{ .Folder }}/request/{{ .Entity }}_request.go", `package request`},
-	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/request/{{ .Entity }}_request_test.go", `package request`},
-
-	{"internal/transport/{{ .Layer }}/{{ .Folder }}/view/{{ .Entity }}_view.go", `package view`},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/mapper/{{ ToLower .Entity }}_mapper.go", `package mapper`},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/response/{{ ToLower .Entity }}_response.go", `package response`},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/view/{{ ToLower .Entity }}_view.go", `package view`},
 }
