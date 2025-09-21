@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 
 	"github.com/fatih/color"
@@ -59,7 +60,7 @@ func createWebTransport(app *SailTransport) {
 
 	data := &webTransportTemplateData{
 		Folder: app.folder,
-		Entity: app.entity,
+		Entity: strings.ToLower(app.entity),
 		Module: cli.GetModuleName(),
 		Layer:  WebTransportLayer,
 	}
@@ -74,7 +75,12 @@ func createWebTransport(app *SailTransport) {
 			panic(err)
 		}
 
-		data.Entity = cli.Capitalize(app.entity)
+		if _, err := os.Stat(pathFile); !os.IsNotExist(err) {
+			log.Add(color.Reset, color.FgHiMagenta, color.Bold).Print("\texist\t")
+			log.Add(color.Reset, color.FgHiWhite).Printf("%s\n", pathFile)
+			continue
+		}
+
 		if err = createFile(pathFile, in.Content, data); err != nil {
 			panic(err)
 		}
@@ -88,7 +94,11 @@ func createWebTransport(app *SailTransport) {
 }
 
 func createPath(key string, data *webTransportTemplateData) (content string, err error) {
-	templ, err := template.New("path").Parse(key)
+	funcs := template.FuncMap{
+		"ToLower": strings.ToLower,
+	}
+
+	templ, err := template.New("path").Funcs(funcs).Parse(key)
 	if err != nil {
 		return "", err
 	}
@@ -102,21 +112,29 @@ func createPath(key string, data *webTransportTemplateData) (content string, err
 }
 
 func createDir(path string) error {
-	return os.MkdirAll(filepath.Dir(path), 0755)
+	return os.MkdirAll(filepath.Dir(strings.ToLower(path)), 0755)
 }
 
 func createFile(path, content string, data *webTransportTemplateData) error {
-	file, err := os.Create(path)
+	file, err := os.Create(strings.ToLower(path))
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
+	funcs := template.FuncMap{
+		"ToLower": strings.ToLower,
+	}
+
 	var t *template.Template
-	if t, err = template.New(path).Parse(content); err != nil {
+	if t, err = template.
+		New(path).
+		Funcs(funcs).
+		Parse(content); err != nil {
 		return err
 	}
 
+	data.Entity = cli.Capitalize(data.Entity)
 	if err := t.Execute(file, &data); err != nil {
 		return err
 	}
