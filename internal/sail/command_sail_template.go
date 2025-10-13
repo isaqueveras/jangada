@@ -18,6 +18,8 @@ var WebTransportTemplate = []Template{
 	{"internal/transport/{{ .Layer }}/{{ .Folder }}/request/{{ ToLower .Entity }}_request.go", template.WebRequest},
 
 	{"internal/application/{{ .Folder }}/orchestrator/{{ ToLower .Entity }}_orchestrator.go", template.ApplicationOrchestrator},
+	{"internal/application/{{ .Folder }}/command/{{ ToLower .Entity }}_command.go", template.ApplicationCommand},
+	{"internal/application/{{ .Folder }}/query/{{ ToLower .Entity }}_query.go", template.ApplicationQuery},
 
 	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/mapper/{{ ToLower .Entity }}_mapper.go", `package mapper`},
 	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/response/{{ ToLower .Entity }}_response.go", `package response`},

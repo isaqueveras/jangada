@@ -47,7 +47,7 @@ func New{{ .Entity }}Controller(core *core.Core, app orchestrator.{{ .Entity }}O
 
 // GetByID define a method to get a resource by id
 func (c *{{ .Entity }}Controller) GetByID(ctx *gin.Context) {
-	params := new(request.{{ .Entity }}Params)
+	params := new(request.Get{{ .Entity }}Params)
 	if err := ctx.ShouldBindUri(params); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
@@ -82,7 +82,7 @@ func (c *{{ .Entity }}Controller) GetAll(ctx *gin.Context) {
 
 // Create define a method to create a resource
 func (c *{{ .Entity }}Controller) Create(ctx *gin.Context) {
-	params := new(request.{{ .Entity }}Params)
+	params := new(request.{{ .Entity }}CreateParams)
 	if err := ctx.ShouldBindJSON(params); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
@@ -110,18 +110,17 @@ func (c *{{ .Entity }}Controller) Update(ctx *gin.Context) {
 		return
 	}
 
-	data, err := c.orchestrator.Update(ctx, params.ToCommand())
-	if err != nil {
+	if err := c.orchestrator.Update(ctx, params.ToCommand()); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusNoContent, data)
+	ctx.JSON(http.StatusNoContent, nil)
 }
 
 // Delete define a method to delete a resource
 func (c *{{ .Entity }}Controller) Delete(ctx *gin.Context) {
-	params := new(request.{{ .Entity }}Params)
+	params := new(request.{{ .Entity }}DeleteParams)
 	if err := ctx.ShouldBindUri(params); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return

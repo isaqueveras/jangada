@@ -11,7 +11,7 @@
 
 ## Features
 
-- DDD-based structure: `application`, `domain`, `interface`, `infrastructure` and `tests`
+- DDD-based structure: `application`, `domain`, `transport`, `infrastructure` and `tests`
 - Plugin system via CLI
 - Background jobs and chained workflows
 - Integrations with Postgres, Gin, Synk, and more
