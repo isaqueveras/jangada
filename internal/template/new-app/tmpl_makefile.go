@@ -24,7 +24,7 @@ dev:
 	make -j3 tailwind templ server
 
 mocks:
-	@go tool mockery --output internal/blog/tests/mocks/services --dir internal/blog/application/interfaces --all
+	@go tool mockery --output internal/blog/tests/mocks/services --dir internal/blog/application/transports --all
 
 clean:
 	@echo "> Cleaning project..."

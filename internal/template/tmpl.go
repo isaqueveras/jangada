@@ -23,8 +23,8 @@ func GetTemplateForNewDomainLayer() map[string]string { return nil }
 // GetTemplateForNewInfrastructureLayer returns a map of templates for new infrastructure layer
 func GetTemplateForNewInfrastructureLayer() map[string]string { return nil }
 
-// GetTemplateForNewInterfaceLayer returns a map of templates for new interface layer
-func GetTemplateForNewInterfaceLayer() map[string]string { return nil }
+// GetTemplateForNewTransportLayer returns a map of templates for new transport layer
+func GetTemplateForNewTransportLayer() map[string]string { return nil }
 
 // GetTemplateForNewTest returns a map of templates for new test
 func GetTemplateForNewTest() map[string]string { return nil }
