@@ -38,10 +38,10 @@ type {{ .Entity }}Filters struct {
 }
 
 // ToCommand converts the {{ .Entity }}Filters to a command
-func (p *{{ .Entity }}Filters) ToCommand() *command.{{ .Entity }}Filters {
-	return &command.{{ .Entity }}Filters{
-		ID:   p.ID,
-		Name: p.Name,
+func (p *{{ .Entity }}Filters) ToCommand() map[string]any {
+	return map[string]any{
+		"id":   &p.ID,
+		"name": &p.Name,
 	}
 }
 

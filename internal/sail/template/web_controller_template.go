@@ -53,7 +53,7 @@ func (c *{{ .Entity }}Controller) GetByID(ctx *gin.Context) {
 		return
 	}
 
-	data, err := c.orchestrator.GetByID(ctx, params.ToCommand())
+	data, err := c.orchestrator.Get(ctx, params.ToCommand())
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
@@ -65,13 +65,13 @@ func (c *{{ .Entity }}Controller) GetByID(ctx *gin.Context) {
 
 // GetAll define a method to get all resources
 func (c *{{ .Entity }}Controller) GetAll(ctx *gin.Context) {
-	params := new(request.SettingFilters)
+	params := new(request.{{ .Entity }}Filters)
 	if err := ctx.ShouldBindQuery(params); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	data, err := c.orchestrator.GetAll(ctx, params.ToCommand())
+	data, err := c.orchestrator.List(ctx, params.ToCommand())
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return

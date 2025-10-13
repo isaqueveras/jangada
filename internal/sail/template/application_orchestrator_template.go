@@ -8,11 +8,11 @@ import "context"
 
 // {{ .Entity }}Orchestrator exposes the orchestrator methods for {{ ToLower .Entity }}
 type {{ .Entity }}Orchestrator interface {
-	// GetByID returns a {{ ToLower .Entity }}
-	GetByID(ctx context.Context, id string) (any, error)
+	// Get returns a {{ ToLower .Entity }}
+	Get(ctx context.Context, id *string) (any, error)
 	
 	// List returns a list of {{ ToLower .Entity }}
-	List(ctx context.Context, filters map[string]string) ([]any, error)
+	List(ctx context.Context, filters map[string]any) ([]any, error)
 	
 	// Create creates a new {{ ToLower .Entity }}
 	Create(ctx context.Context, params *command.{{ .Entity }}CreateParams) (any, error)
@@ -21,6 +21,6 @@ type {{ .Entity }}Orchestrator interface {
 	Update(ctx context.Context, params *command.{{ .Entity }}UpdateParams) (any, error)
 
 	// Delete deletes a {{ .Entity }}
-	Delete(ctx context.Context, id string) error
+	Delete(ctx context.Context, id *string) error
 }
 `
