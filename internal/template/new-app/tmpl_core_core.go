@@ -47,7 +47,7 @@ func New() *Core {
 	return server
 }
 
-func (c *Core) Init() error { return c.router.Run(c.address) }
+func (c *Core) Init() error         { return c.router.Run(c.address) }
 func (c *Core) Router() *gin.Engine { return c.router }
-func (c *Core) Log() *slog.Logger { return c.log }
+func (c *Core) Log() *slog.Logger   { return c.log }
 `

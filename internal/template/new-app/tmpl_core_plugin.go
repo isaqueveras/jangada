@@ -6,20 +6,20 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type Plugin interface {
 	Name() string
-	Migrate(*gorm.DB) error
+	Migrate() error
 	Register(*gin.Engine)
 }
 
 func (c *Core) SetPlugin(plug Plugin) {
 	c.log.Info(fmt.Sprintf("Registering plugin: %s", plug.Name()))
-	if err := plug.Migrate(c.db); err != nil {
+	if err := plug.Migrate(); err != nil {
 		panic(fmt.Sprintf("failed to migrate database: %v", err))
 	}
 	plug.Register(c.router)
 	c.log.Info(fmt.Sprintf("Plugin %s registered", plug.Name()))
-}`
+}
+`
