@@ -16,10 +16,11 @@ import (
 
 func Command() *cobra.Command {
 	return &cobra.Command{
-		Use:   "new [name]",
-		Short: "Create a new app",
-		Args:  cobra.ExactArgs(1),
-		Run:   execute,
+		Use:     "new [name]",
+		Short:   "Create a new app",
+		Args:    cobra.ExactArgs(1),
+		Example: "jangada new myapp",
+		Run:     execute,
 	}
 }
 

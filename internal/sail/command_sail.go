@@ -10,14 +10,7 @@ type Sail struct {
 
 // Command represents the 'sail' command.
 func Command() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "sail",
-		Short: "Create layer for bounded context",
-	}
-
-	cmd.AddCommand(
-		transportCommand(),
-	)
-
+	cmd := &cobra.Command{Use: "sail", Short: "Create layer for bounded context"}
+	cmd.AddCommand(transportCommand())
 	return cmd
 }

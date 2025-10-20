@@ -16,9 +16,12 @@ func main() {
 	cli.SetFullDirectoryPath()
 
 	cmd := &cobra.Command{
-		Use:     "jangada",
-		Short:   "Jangada is a CLI tool for project scaffolding and code generation.",
-		Example: "jangada new my-app --module github.com/username/my-app --database postgres",
+		Use:               "jangada",
+		Short:             "Jangada is a CLI tool for project scaffolding and code generation.",
+		Example:           "jangada new my-app --module github.com/username/my-app --database postgres",
+		ValidArgsFunction: cobra.FixedCompletions([]cobra.Completion{"new", "sail"}, cobra.ShellCompDirective(0)),
+		SuggestFor:        []string{"new", "sail"},
+		Version:           "v0.1.0-beta",
 	}
 
 	cmd.AddCommand(
@@ -29,7 +32,5 @@ func main() {
 		sail.Command(),
 	)
 
-	if err := cmd.Execute(); err != nil {
-		panic(err)
-	}
+	cmd.Execute()
 }

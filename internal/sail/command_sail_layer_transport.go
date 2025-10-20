@@ -32,6 +32,14 @@ func transportCommand() *cobra.Command {
 		Args:    cobra.RangeArgs(1, 2),
 		Example: exampleCreateTransportText,
 		Run:     cmd.Execute,
+		ValidArgs: []cobra.Completion{
+			"web",
+			// "rest",
+			// "grpc",
+			// "graphql",
+			// "webhook",
+			// "all",
+		},
 	}
 }
 
