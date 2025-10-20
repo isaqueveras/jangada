@@ -19,39 +19,18 @@ type SailTransport struct {
 	pathDir, folder, entity, module string
 }
 
-// transportCommand ...
-func transportCommand() *cobra.Command {
-	cmd := &SailTransport{
+// Execute is the handler for the 'sail transport' command.
+func Execute(_ *cobra.Command, args []string) {
+	folder, entity, layer := newSailTransportValidate(args...)
+
+	st := &SailTransport{
+		folder:  folder,
+		entity:  entity,
 		pathDir: cli.GetDirectoryPath(),
 		module:  cli.GetModuleName(),
 	}
 
-	return &cobra.Command{
-		Use:     "transport",
-		Short:   "Create transport layer",
-		Args:    cobra.RangeArgs(1, 2),
-		Example: exampleCreateTransportText,
-		Run:     cmd.Execute,
-		ValidArgs: []cobra.Completion{
-			"web",
-			// "rest",
-			// "grpc",
-			// "graphql",
-			// "webhook",
-			// "all",
-		},
-	}
-}
-
-// Execute is the handler for the 'sail transport' command.
-func (s *SailTransport) Execute(_ *cobra.Command, args []string) {
-	folder, entity, layer := newSailTransportValidate(args...)
-	mapperCreateLayerTransport[layer](&SailTransport{
-		folder:  folder,
-		entity:  entity,
-		pathDir: s.pathDir,
-		module:  s.module,
-	})
+	mapperCreateLayerTransport[layer](st)
 }
 
 type webTransportTemplateData struct {

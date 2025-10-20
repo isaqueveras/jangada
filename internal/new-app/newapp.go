@@ -14,17 +14,7 @@ import (
 	temp "github.com/isaqueveras/jangada/internal/template"
 )
 
-func Command() *cobra.Command {
-	return &cobra.Command{
-		Use:     "new [name]",
-		Short:   "Create a new app",
-		Args:    cobra.ExactArgs(1),
-		Example: "jangada new myapp",
-		Run:     execute,
-	}
-}
-
-func execute(cmd *cobra.Command, args []string) {
+func Execute(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		cmd.Help()
 		return
