@@ -1,18 +1,56 @@
 package newapp
 
 const tmplConfigDatabaseYAML = `development:
-  driver: sqlite3
-  url: db/jangada_development.db?cache=shared&mode=memory
+  - nick: default
+    name: {{ .AppName }}
+    username: postgres
+    password: postgres
+    hostname: localhost
+    port: "5432"
+    max_conn: 20
+    max_idle: 5
+    read_only: false
+    main: true
+    transaction_timeout: 30
+    ssl_mode: disable
+    ssl_client:
+      path_cert: /etc/ssl/certs/client.crt
+      path_key: /etc/ssl/private/client.key
+      path_ca: /etc/ssl/certs/ca.crt
 
 test:
-  driver: sqlite3
-  url: db/jangada_test.db?cache=shared&mode=memory
+	- nick: default
+		name: {{ .AppName }}
+		username: postgres
+		password: postgres
+		hostname: localhost
+		port: "5432"
+		max_conn: 20
+		max_idle: 5
+		read_only: false
+		main: true
+		transaction_timeout: 30
+		ssl_mode: disable
+		ssl_client:
+			path_cert: /etc/ssl/certs/client.crt
+			path_key: /etc/ssl/private/client.key
+			path_ca: /etc/ssl/certs/ca.crt
 
 production:
-  driver: ${DATABASE_DRIVER}
-  url: ${DATABASE_URL}
-
-staging:
-  driver: ${DATABASE_DRIVER}
-  url: ${DATABASE_URL}
+	- nick: default
+		name: {{ .AppName }}
+		username: postgres
+		password: postgres
+		hostname: localhost
+		port: "5432"
+		max_conn: 20
+		max_idle: 5
+		read_only: false
+		main: true
+		transaction_timeout: 30
+		ssl_mode: enable
+		ssl_client:
+			path_cert: /etc/ssl/certs/client.crt
+			path_key: /etc/ssl/private/client.key
+			path_ca: /etc/ssl/certs/ca.crt
 `
