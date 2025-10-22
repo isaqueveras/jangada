@@ -29,7 +29,7 @@ go install github.com/isaqueveras/jangada@latest
 
 ## Create a new app
 ```bash
-jangada new myapp
-cd myapp
-jangada serve
+$ jangada new mercadolivre
+# or with flags
+$ jangada new mercadolivre --mod=github.com/isaqueveras/mercadolivre --host=localhost:8782 --db=postgres
 ```
