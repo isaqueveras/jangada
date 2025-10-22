@@ -20,10 +20,10 @@ func GetConfig() *Jangada {
 
 // Jangada ...
 type Jangada struct {
-	AppName         string
-	ModuleName      string
-	DefaultAddrPort string
-	Database        string
+	AppName     string
+	ModuleName  string
+	DefaultHost string
+	Database    string
 
 	dirBase       string
 	directoryPath string
@@ -32,11 +32,11 @@ type Jangada struct {
 // Init create a new instance
 func Init(dirBase string) {
 	cfg = &Jangada{
-		dirBase:         dirBase,
-		AppName:         "my-app",
-		ModuleName:      "my-app",
-		DefaultAddrPort: ":8080",
-		Database:        "postgres",
+		dirBase:     dirBase,
+		AppName:     "my-app",
+		ModuleName:  "my-app",
+		DefaultHost: ":8080",
+		Database:    "postgres",
 	}
 }
 
@@ -74,12 +74,12 @@ func SetModuleName(module string) {
 	cfg.ModuleName = module
 }
 
-// SetDefaultAddrPort ...
-func SetDefaultAddrPort(port string) {
-	if port == "" {
+// SetDefaultHost ...
+func SetDefaultHost(host string) {
+	if host == "" {
 		return
 	}
-	cfg.DefaultAddrPort = port
+	cfg.DefaultHost = host
 }
 
 func GetDirBase() string {

@@ -8,8 +8,8 @@ var Template = map[string]string{
 	"Makefile":   tmplMakefile,  // contains makefile of the app
 	"README.md":  tmplReadme,    // contains readme of the app
 
-	"core/core.go":   tmplCoreCore,   // contains core of the app
-	"core/plugin.go": tmplCorePlugin, // contains plugin of the app
+	"core/core.go": tmplCoreCore, // contains core of the app
+	// "core/plugin.go": tmplCorePlugin, // contains plugin of the app
 
 	"log/access.log": "", // contains access log of the app
 	"log/error.log":  "", // contains error log of the app

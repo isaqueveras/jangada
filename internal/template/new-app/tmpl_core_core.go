@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	_defaultAddr = "{{ .DefaultAddrPort }}"
+	_defaultHost = "{{ .DefaultHost }}"
 )
 
 // Core defines the core framework
@@ -29,7 +29,7 @@ func New() *Core {
 	config.NewConfig()
 
 	server := &Core{
-		address: _defaultAddr,
+		address: _defaultHost,
 		router:  gin.Default(),
 		log:     slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{})),
 	}

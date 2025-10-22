@@ -22,7 +22,6 @@ func Execute(cmd *cobra.Command, args []string) {
 
 	cli.SetAppName(args[0])
 
-	setFlagsNewProject(cmd)
 	createRootDir()
 	createRootFiles()
 	gitInit()
@@ -40,20 +39,8 @@ func Execute(cmd *cobra.Command, args []string) {
 	fmt.Println("")
 }
 
-func setFlagsNewProject(cmd *cobra.Command) {
-	defaultAddrPort, _ := cmd.Flags().GetString("port")
-	cli.SetDefaultAddrPort(defaultAddrPort)
-
-	moduleName, _ := cmd.Flags().GetString("module")
-	cli.SetModuleName(moduleName)
-
-	database, _ := cmd.Flags().GetString("database")
-	cli.SetDatabase(database)
-}
-
 func createRootDir() {
 	cli.SetFullDirectoryPath()
-	fmt.Printf("cli.GetDirectoryPath(): %v\n", cli.GetDirectoryPath())
 	if err := os.MkdirAll(cli.GetDirectoryPath(), 0755); err != nil {
 		panic(err)
 	}
@@ -101,7 +88,8 @@ func execGoModTidy() {
 	command.Stdout, command.Stderr = os.Stdout, os.Stderr
 
 	if err := command.Run(); err != nil {
-		panic(err)
+		log.Add(color.FgHiRed, color.Bold).Print("\tError: ")
+		log.Add(color.Reset).Printf("installing dependencies: %s\n", err)
 	}
 }
 

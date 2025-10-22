@@ -30,7 +30,17 @@ func main() {
 		Args:    cobra.ExactArgs(1),
 		Example: "jangada new myapp",
 		Run:     newapp.Execute,
-		Aliases: []string{"n"},
+	}
+
+	commandNew.Flags().String("host", ":8080", "host")
+	commandNew.Flags().String("mod", cli.GetConfig().AppName, "mod")
+	commandNew.Flags().String("db", "postgres", "db")
+
+	commandNew.PreRun = func(cmd *cobra.Command, args []string) {
+		cli.SetAppName(args[0])
+		cli.SetDefaultHost(cmd.Flag("host").Value.String())
+		cli.SetModuleName(cmd.Flag("mod").Value.String())
+		cli.SetDatabase(cmd.Flag("db").Value.String())
 	}
 
 	commandSail := &cobra.Command{
