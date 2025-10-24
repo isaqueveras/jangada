@@ -1,46 +1,44 @@
+// Package newapp contains templates for new app
 package newapp
 
 const tmplCoreCore string = `// Package core defines the core framework
 package core
 
 import (
+	"log"
 	"log/slog"
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 
 	"{{ .ModuleName }}/config"
 	"{{ .ModuleName }}/web/layouts"
 )
 
 const (
-	_defaultAddr = "{{ .DefaultAddrPort }}"
+	_defaultHost = "{{ .DefaultHost }}"
 )
 
+// Core defines the core framework
 type Core struct {
+	cfg			*config.Config
 	router  *gin.Engine
 	log     *slog.Logger
-	db      *gorm.DB
 	address string
-
-	tls *TLS
 }
 
-type TLS struct {
-	CertFile string
-	KeyFile  string
-}
-
+// New creates a new core framework
 func New() *Core {
-	config.NewConfig()
+	cfg, err := config.NewConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	server := &Core{
-		address: _defaultAddr,
+		address: _defaultHost,
 		router:  gin.Default(),
 		log:     slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{})),
-		tls:     &TLS{},
+		cfg:     cfg,
 	}
 
 	server.router.Static("public", "public")
@@ -53,35 +51,13 @@ func New() *Core {
 		layouts.Welcome().Render(ctx.Request.Context(), ctx.Writer)
 	})
 
-	if err := server.database(); err != nil {
-		server.Log().Error("failed to connect to database", "error", err)
-		return nil
-	}
-
 	return server
 }
 
-func (c *Core) Init() error {
-	return c.router.Run(c.address)
-}
+func (c *Core) Init() error         { return c.router.Run(c.address) }
+func (c *Core) Router() *gin.Engine { return c.router }
+func (c *Core) Log() *slog.Logger   { return c.log }
 
-func (c *Core) InitTLS() error {
-	return c.router.RunTLS(c.address, c.tls.CertFile, c.tls.KeyFile)
-}
-
-func (c *Core) Router() *gin.Engine {
-	return c.router
-}
-
-func (c *Core) Log() *slog.Logger {
-	return c.log
-}
-
-func (c *Core) DB() *gorm.DB {
-	return c.db
-}
-
-func (c *Core) database() (err error) {
-	c.db, err = gorm.Open(sqlite.Open("db/jangada_development.db"))
-	return err
-}`
+// Config returns the config
+func (c *Core) Config() *config.Config { return c.cfg }
+`
