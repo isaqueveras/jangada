@@ -152,6 +152,6 @@ func load[T any](path string, env string) (T, error) {
 		return cfg, nil
 	}
 
-	return cfg, fmt.Errorf("configuração para ambiente %s não encontrada no arquivo %s", env, path)
+	return cfg, fmt.Errorf("environment configuration %s not found in file %s", env, path)
 }
 `

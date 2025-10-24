@@ -16,13 +16,14 @@ var Template = map[string]string{
 
 	"config/config.go":     tmplConfigConfig,       // contains config of the app
 	"config/database.yaml": tmplConfigDatabaseYAML, // contains database of the app
+	"config/app.yaml":      tmplConfigAppYAML,      // contains app of the app
 
-	"services/database/interface.go":         serviceDatabaseInterfaceTemp,
-	"services/database/pool.go":              serviceDatabasePoolTemp,
-	"services/database/transaction.go":       serviceDatabaseTransactionTemp,
-	"services/database/postgres/postgres.go": serviceDatabasePostgresTemp,
-	"services/database/seeds/seeds.go":       serviceDatabaseSeedsTemp,
-	"services/database/migrations/.keep":     "",
+	"pkg/database/interface.go":         serviceDatabaseInterfaceTemp,
+	"pkg/database/pool.go":              serviceDatabasePoolTemp,
+	"pkg/database/transaction.go":       serviceDatabaseTransactionTemp,
+	"pkg/database/postgres/postgres.go": serviceDatabasePostgresTemp,
+	"pkg/database/seeds/seeds.go":       serviceDatabaseSeedsTemp,
+	"pkg/database/migrations/.keep":     "",
 
 	"cmd/app/main.go": tmplAppMain, // contains main of the app
 

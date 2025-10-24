@@ -1,10 +1,12 @@
+// Package newapp contains templates for new app
 package newapp
 
-const tmplAppMain = `package main
+const tmplAppMain = `// Package main contains the main function of the app
+package main
 
 import (
 	"{{ .ModuleName }}/core"
-	"{{ .ModuleName }}/services/database"
+	"{{ .ModuleName }}/pkg/database"
 )
 
 func main() {

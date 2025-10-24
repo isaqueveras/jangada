@@ -18,7 +18,7 @@ func main() {
 	root := &cobra.Command{
 		Use:               "jangada",
 		Short:             "Jangada is a CLI tool for project scaffolding and code generation.",
-		Example:           "jangada new my-app --module github.com/username/my-app --database postgres",
+		Example:           "jangada new myapp --mod=github.com/username/myapp --db=postgres",
 		ValidArgsFunction: cobra.FixedCompletions([]cobra.Completion{"new", "sail"}, cobra.ShellCompDirective(0)),
 		SuggestFor:        []string{"new", "sail"},
 		Version:           "v0.1.0-beta",
@@ -28,7 +28,7 @@ func main() {
 		Use:     "new [name]",
 		Short:   "Create a new app",
 		Args:    cobra.ExactArgs(1),
-		Example: "jangada new myapp",
+		Example: "jangada new myapp --mod=github.com/username/myapp --db=postgres",
 		Run:     newapp.Execute,
 	}
 

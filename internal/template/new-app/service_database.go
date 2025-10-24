@@ -164,7 +164,7 @@ import (
 	"errors"
 
 	"{{ .ModuleName }}/config"
-	"{{ .ModuleName }}/services/database/postgres"
+	"{{ .ModuleName }}/pkg/database/postgres"
 )
 
 const roSuffix = "_ro"
