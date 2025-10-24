@@ -52,19 +52,17 @@ func main() {
 	}
 
 	commandTransport := &cobra.Command{
-		Use:     "transport",
-		Short:   "Create transport layer",
-		Args:    cobra.RangeArgs(1, 2),
-		Example: "jangada sail transport catalog/company",
-		Run:     sail.Execute,
-		ValidArgs: []cobra.Completion{
-			"web",
-			// "rest",
-			// "grpc",
-			// "graphql",
-			// "webhook",
-			// "all",
-		},
+		Use:       "transport",
+		Short:     "Create transport layer",
+		Args:      cobra.RangeArgs(1, 2),
+		Example:   "jangada sail transport catalog/company --layer={web,rest}",
+		Run:       sail.Execute,
+		ValidArgs: []cobra.Completion{"web", "rest"},
+	}
+
+	commandTransport.Flags().String("layer", "web", "choose transport layer")
+	commandTransport.PreRun = func(cmd *cobra.Command, args []string) {
+		cli.SetTransportLayer(cmd.Flag("layer").Value.String())
 	}
 
 	commandSail.AddCommand(commandTransport)
