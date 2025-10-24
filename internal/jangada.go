@@ -25,6 +25,8 @@ type Jangada struct {
 	DefaultHost string
 	Database    string
 
+	TransportLayer string
+
 	dirBase       string
 	directoryPath string
 }
@@ -141,4 +143,12 @@ func CreateFile(path, tmpl string) {
 
 	log.Add(color.FgHiGreen, color.Bold).Print("\tcreate\t")
 	log.Add(color.FgHiWhite, color.Reset).Printf("%s\n", path)
+}
+
+// SetTransportLayer set the transport layer
+func SetTransportLayer(layer string) {
+	if layer == "" {
+		return
+	}
+	cfg.TransportLayer = layer
 }
