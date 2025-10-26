@@ -26,9 +26,6 @@ type SailTransport struct {
 func Execute(cmd *cobra.Command, args []string) {
 	cli.SetFlagTransportLayer(cmd.Flag("layer").Value.String())
 	cli.SetTransportFlagMethodName(cmd.Flag("name").Value.String())
-	if cmd.Flag("name").Value.String() == "" {
-		cli.SetTransportFlagCreateController(cmd.Flag("controller").Value.String() == "true")
-	}
 
 	folder, entity := getFolderAndEntityToTransport(args...)
 	cfg := cli.GetConfig()
@@ -62,21 +59,28 @@ func createTransport(st *SailTransport) {
 		}
 	)
 
-	if !cfg.TransportInfo.FlagCreateController && cfg.TransportInfo.FlagMethodName == "" {
-		log.Add(color.Reset, color.FgHiRed, color.Bold).Println("You must use --controller or --method flag.")
-		return
-	}
+	// command: jangada sail transport order/pay --layer=rest
+	createStructureController := (cfg.TransportInfo.FlagMethodName == "" && st.layer == restTransportLayer)
 
-	log.Add(color.Bold, color.FgHiGreen).
-		Print("Creating transport layer structure...\n")
+	// command: jangada sail transport order/pay --name=SavePayment --layer={rest}
+	createMethodController := (cfg.TransportInfo.FlagMethodName != "")
+
+	log.Add(color.Bold, color.FgHiGreen).Print("Creating transport layer structure...\n")
 
 	switch {
-	case cfg.TransportInfo.FlagCreateController && st.layer == RestTransportLayer:
+	case createStructureController:
 		err = createFileTransport(data, transportTemplateRest)
-	case cfg.TransportInfo.FlagCreateController && st.layer == WebTransportLayer:
-		err = errors.New("transport layer (web) not implemented")
-	case !cfg.TransportInfo.FlagCreateController && cfg.TransportInfo.FlagMethodName != "":
-		err = createFileTransport(data, transportTemplateRest)
+
+	case createMethodController:
+		switch st.layer {
+		case restTransportLayer:
+			err = createFileTransport(data, transportTemplateRest)
+		default:
+			err = errors.New("only rest transport layer is supported")
+		}
+
+	default:
+		err = errors.New("transport layer not implemented")
 	}
 
 	if err != nil {
@@ -84,8 +88,7 @@ func createTransport(st *SailTransport) {
 		return
 	}
 
-	color.New().Add(color.Reset, color.Bold, color.FgHiGreen).
-		Print("Transport layer structure created successfully!\n")
+	color.New().Add(color.Reset, color.Bold, color.FgHiGreen).Print("Transport layer structure created successfully!\n")
 }
 
 func createFileTransport(data *webTransportTemplateData, templates []Template) error {

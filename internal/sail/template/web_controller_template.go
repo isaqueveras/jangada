@@ -175,3 +175,7 @@ func (c *Controller) Me(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
 `
+
+const ControllerTestTemplate = `// Package {{ ToLower .Entity }}_test defines a {{ .Layer }} controller 
+package {{ ToLower .Entity }}_test
+`

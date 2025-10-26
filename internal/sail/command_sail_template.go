@@ -26,8 +26,8 @@ var transportTemplateRest = []Template{
 		CanModify: true,
 	},
 	{
-		Path:      "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/model.go",
-		Content:   template.TransportModel,
+		Path:      "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller_test.go",
+		Content:   template.ControllerTestTemplate,
 		CanModify: false,
 	},
 }
