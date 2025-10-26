@@ -18,15 +18,15 @@ func Handler(core *core.Core) {
 
 // HandlerLayerController is a template for a {{ .Layer }} controller
 const HandlerLayerController = `// Package {{ .Layer }} defines the transport layer handlers and routes.
-package {{ .Layer }}
+package {{ ToLower .Layer }}
 
 import (
 	"{{ .Module }}/core"
-	"{{ .Module }}/internal/transport/{{ .Layer }}/{{ .Folder }}/controller"
+	"{{ .Module }}/internal/transport/{{ ToLower .Layer }}/{{ ToLower .Folder }}/{{ ToLower .Entity }}"
 )
 
 // Handler builds transport handlers and registers them to the core router.
 func Handler(core *core.Core) {
-	controller.New{{ .Entity }}Controller(core, nil)
+	{{ ToLower .Entity }}.NewController(core /* orchestrator here */)
 }
 `

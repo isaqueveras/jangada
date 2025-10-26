@@ -32,9 +32,9 @@ type Jangada struct {
 }
 
 type TransportInfo struct {
-	TransportLayer   string
-	FlagCreateCRUD   bool
-	FlagCreateMethod string
+	FlagTransportLayer   string
+	FlagCreateController bool
+	FlagCreateMethod     string
 }
 
 // Init create a new instance
@@ -147,10 +147,10 @@ func CreateFile(path, tmpl string) {
 }
 
 // SetFlagTransportLayer set the transport layer
-func SetFlagTransportLayer(layer string) { cfg.TransportInfo.TransportLayer = layer }
+func SetFlagTransportLayer(layer string) { cfg.TransportInfo.FlagTransportLayer = layer }
 
-// SetFlagCRUD set the transport layer
-func SetFlagCRUD(crud bool) { cfg.TransportInfo.FlagCreateCRUD = crud }
+// SetTransportFlagCreateController set the transport layer
+func SetTransportFlagCreateController(crud bool) { cfg.TransportInfo.FlagCreateController = crud }
 
-// SetFlagMethod set the transport layer
-func SetFlagMethod(method string) { cfg.TransportInfo.FlagCreateMethod = method }
+// SetTransportFlagCreateMethod set the transport layer
+func SetTransportFlagCreateMethod(method string) { cfg.TransportInfo.FlagCreateMethod = method }

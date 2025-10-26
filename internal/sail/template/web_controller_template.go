@@ -2,8 +2,8 @@
 package template
 
 // ControllerTemplate is a template for a {{ .Layer }} controller
-const ControllerTemplate = `// Package controller defines a {{ .Layer }} controller for {{ .Entity }}Controller 
-package controller
+const ControllerTemplate = `// Package {{ ToLower .Entity }} defines a {{ .Layer }} controller for {{ .Entity }}Controller 
+package {{ ToLower .Entity }}
 
 import (
 	"net/http"
@@ -15,14 +15,14 @@ import (
 	"{{ .Module }}/internal/transport/{{ .Layer }}/{{ .Folder }}/request"
 )
 
-// {{ .Entity }}Controller is a controller for {{ ToLower .Entity }}
-type {{ .Entity }}Controller struct {
-	orchestrator orchestrator.{{ .Entity }}Orchestrator
+// Controller is a controller for {{ ToLower .Entity }}
+type Controller struct {
+	orchestrator orchestrator.Orchestrator
 }
 
-// New{{ .Entity }}Controller register routes for {{ ToLower .Entity }}
-func New{{ .Entity }}Controller(core *core.Core, app orchestrator.{{ .Entity }}Orchestrator) {
-	ctrl := &{{ .Entity }}Controller{
+// NewController register routes for {{ ToLower .Entity }}
+func NewController(core *core.Core, app orchestrator.Orchestrator) {
+	ctrl := &Controller{
 		orchestrator: app,
 	}
 
@@ -136,7 +136,42 @@ func (c *{{ .Entity }}Controller) Delete(ctx *gin.Context) {
 `
 
 const ControllerMethod string = `// {{ .Method }} ...
-func (c *{{ .Entity }}Controller) {{ .Method }}(ctx *gin.Context) {
+func (c *Controller) {{ .Method }}(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+`
+
+// ControllerTemplateClean is a template for a {{ .Layer }} controller
+const ControllerTemplateClean = `// Package {{ ToLower .Entity }} defines a {{ .Layer }} controller 
+package {{ ToLower .Entity }}
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"{{ .Module }}/core"
+)
+
+// Controller is a controller for {{ ToLower .Entity }}
+type Controller struct {
+	// orchestrator orchestrator.Orchestrator
+}
+
+// NewController register routes for {{ ToLower .Entity }}
+func NewController(core *core.Core /* app orchestrator.Orchestrator */) {
+	ctrl := &Controller{
+		// orchestrator: app,
+	}
+
+	// Create a new group of resource. 
+	r := core.Router().Group("/v1/api/{{ .Folder }}")
+
+	// Create a new resource and its routes.
+	r.GET("me", ctrl.Me)
+}
+
+func (c *Controller) Me(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
 `
