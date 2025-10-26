@@ -62,7 +62,7 @@ func main() {
 
 	commandTransport.Flags().String("layer", "web", "choose transport layer")
 	commandTransport.Flags().Bool("controller", true, "create a controller in transport")
-	commandTransport.Flags().String("method", "", "create a method in controller")
+	commandTransport.Flags().String("name", "", "create a method/router in controller")
 
 	commandSail.AddCommand(commandTransport)
 	root.AddCommand(commandNew, commandSail)

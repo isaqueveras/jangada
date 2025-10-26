@@ -25,8 +25,8 @@ type SailTransport struct {
 // Execute is the handler for the 'sail transport' command.
 func Execute(cmd *cobra.Command, args []string) {
 	cli.SetFlagTransportLayer(cmd.Flag("layer").Value.String())
-	cli.SetTransportFlagCreateMethod(cmd.Flag("method").Value.String())
-	if cmd.Flag("method").Value.String() == "" {
+	cli.SetTransportFlagMethodName(cmd.Flag("name").Value.String())
+	if cmd.Flag("name").Value.String() == "" {
 		cli.SetTransportFlagCreateController(cmd.Flag("controller").Value.String() == "true")
 	}
 
@@ -58,11 +58,11 @@ func createTransport(st *SailTransport) {
 			Entity: strings.ToLower(st.entity),
 			Module: cli.GetModuleName(),
 			Layer:  st.layer,
-			Method: cfg.TransportInfo.FlagCreateMethod,
+			Method: cfg.TransportInfo.FlagMethodName,
 		}
 	)
 
-	if !cfg.TransportInfo.FlagCreateController && cfg.TransportInfo.FlagCreateMethod == "" {
+	if !cfg.TransportInfo.FlagCreateController && cfg.TransportInfo.FlagMethodName == "" {
 		log.Add(color.Reset, color.FgHiRed, color.Bold).Println("You must use --controller or --method flag.")
 		return
 	}
@@ -75,7 +75,7 @@ func createTransport(st *SailTransport) {
 		err = createFileTransport(data, transportTemplateRest)
 	case cfg.TransportInfo.FlagCreateController && st.layer == WebTransportLayer:
 		err = errors.New("transport layer (web) not implemented")
-	case !cfg.TransportInfo.FlagCreateController && cfg.TransportInfo.FlagCreateMethod != "":
+	case !cfg.TransportInfo.FlagCreateController && cfg.TransportInfo.FlagMethodName != "":
 		err = createFileTransport(data, transportTemplateRest)
 	}
 
