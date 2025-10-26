@@ -1,8 +1,8 @@
 // Package template contains templates for a web request
 package template
 
-const Request = `// Package request defines a request for {{ .Entity }}
-package request
+const TransportModel = `// Package request defines a request for {{ .Entity }}
+package {{ ToLower .Entity }}
 
 import "{{ .Module }}/internal/application/{{ .Folder }}/command"
 

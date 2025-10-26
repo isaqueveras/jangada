@@ -1,33 +1,30 @@
 // Package sail provides commands to create layers for a bounded context.
 package sail
 
-// TransportLayer defines the type for transport layers.
-type TransportLayer string
-
 const (
-	// AllTransportLayer defines all layers
-	AllTransportLayer TransportLayer = "all"
-	// WebTransportLayer defines the web layer
-	WebTransportLayer TransportLayer = "web"
-	// RestTransportLayer defines the rest layer
-	RestTransportLayer TransportLayer = "rest"
-	// GRPCTransportLayer defines the grpc layer
-	GRPCTransportLayer TransportLayer = "grpc"
+	// allTransportLayer defines all layers
+	allTransportLayer string = "all"
+	// webTransportLayer defines the web layer
+	webTransportLayer string = "web"
+	// restTransportLayer defines the rest layer
+	restTransportLayer string = "rest"
+	// gRPCTransportLayer defines the grpc layer
+	gRPCTransportLayer string = "grpc"
 	// GRPCLayer defines the graphql layer
-	GraphQLTransportLayer TransportLayer = "graphql"
-	// WebhookTransportLayer defines the webhook layer
-	WebhookTransportLayer TransportLayer = "webhook"
+	graphQLTransportLayer string = "graphql"
+	// webhookTransportLayer defines the webhook layer
+	webhookTransportLayer string = "webhook"
 )
 
 // TypeFuncCreateLayerTransport defines a function type for creating transport layers.
 type TypeFuncCreateLayerTransport func(*SailTransport)
 
 // mapperCreateLayerTransport maps layers to their corresponding creation functions.
-var mapperCreateLayerTransport = map[TransportLayer]TypeFuncCreateLayerTransport{
-	WebTransportLayer:     createTransport,
-	RestTransportLayer:    createTransport,
-	GRPCTransportLayer:    createGRPCTransport,
-	GraphQLTransportLayer: createGraphQLTransport,
-	WebhookTransportLayer: createWebhookTransport,
-	AllTransportLayer:     createAllTransport,
+var mapperCreateLayerTransport = map[string]TypeFuncCreateLayerTransport{
+	webTransportLayer:     createTransport,
+	restTransportLayer:    createTransport,
+	gRPCTransportLayer:    createGRPCTransport,
+	graphQLTransportLayer: createGraphQLTransport,
+	webhookTransportLayer: createWebhookTransport,
+	allTransportLayer:     createAllTransport,
 }

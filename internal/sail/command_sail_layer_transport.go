@@ -3,6 +3,7 @@ package sail
 
 import (
 	"bytes"
+	"errors"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,8 +11,10 @@ import (
 	"text/template"
 
 	"github.com/fatih/color"
-	cli "github.com/isaqueveras/jangada/internal"
 	"github.com/spf13/cobra"
+
+	cli "github.com/isaqueveras/jangada/internal"
+	templateSail "github.com/isaqueveras/jangada/internal/sail/template"
 )
 
 // SailTransport defines the Sail transport structure.
@@ -22,26 +25,23 @@ type SailTransport struct {
 // Execute is the handler for the 'sail transport' command.
 func Execute(cmd *cobra.Command, args []string) {
 	cli.SetFlagTransportLayer(cmd.Flag("layer").Value.String())
-	cli.SetFlagCRUD(cmd.Flag("crud").Value.String() == "true")
-	cli.SetFlagMethod(cmd.Flag("method").Value.String())
+	cli.SetTransportFlagMethodName(cmd.Flag("name").Value.String())
 
 	folder, entity := getFolderAndEntityToTransport(args...)
-
 	cfg := cli.GetConfig()
 	st := &SailTransport{
 		folder:  folder,
 		entity:  entity,
 		pathDir: cfg.DirectoryPath,
 		module:  cfg.ModuleName,
-		layer:   cfg.TransportInfo.TransportLayer,
+		layer:   cfg.TransportInfo.FlagTransportLayer,
 	}
 
-	mapperCreateLayerTransport[TransportLayer(cfg.TransportInfo.TransportLayer)](st)
+	mapperCreateLayerTransport[cfg.TransportInfo.FlagTransportLayer](st)
 }
 
 type webTransportTemplateData struct {
-	Folder, Entity, Module, Method string
-	Layer                          TransportLayer
+	Layer, Folder, Entity, Module, Method string
 }
 
 // createTransport generates the transport layer structure.
@@ -49,36 +49,46 @@ func createTransport(st *SailTransport) {
 	var (
 		cfg  = cli.GetConfig()
 		log  = color.New()
+		err  error
 		data = &webTransportTemplateData{
 			Folder: st.folder,
 			Entity: strings.ToLower(st.entity),
 			Module: cli.GetModuleName(),
-			Layer:  TransportLayer(st.layer),
-			Method: cfg.TransportInfo.FlagCreateMethod,
+			Layer:  st.layer,
+			Method: cfg.TransportInfo.FlagMethodName,
 		}
 	)
 
-	if !cfg.TransportInfo.FlagCreateCRUD && cfg.TransportInfo.FlagCreateMethod == "" {
-		log.Add(color.Reset, color.FgHiRed, color.Bold).Println("You must use --crud or --method flag.")
+	// command: jangada sail transport order/pay --layer=rest
+	createStructureController := (cfg.TransportInfo.FlagMethodName == "" && st.layer == restTransportLayer)
+
+	// command: jangada sail transport order/pay --name=SavePayment --layer={rest}
+	createMethodController := (cfg.TransportInfo.FlagMethodName != "")
+
+	log.Add(color.Bold, color.FgHiGreen).Print("Creating transport layer structure...\n")
+
+	switch {
+	case createStructureController:
+		err = createFileTransport(data, transportTemplateRest)
+
+	case createMethodController:
+		switch st.layer {
+		case restTransportLayer:
+			err = createFileTransport(data, transportTemplateRest)
+		default:
+			err = errors.New("only rest transport layer is supported")
+		}
+
+	default:
+		err = errors.New("transport layer not implemented")
+	}
+
+	if err != nil {
+		log.Add(color.Reset, color.FgHiRed).Println("Error: " + err.Error())
 		return
 	}
 
-	// log.Add(color.Bold, color.FgHiBlue).
-	// 	Print("Creating " + st.layer + " transport layer structure...\n\n")
-
-	switch {
-	case cfg.TransportInfo.FlagCreateCRUD:
-		if err := createFileTransport(data, transportTemplateCRUD); err != nil {
-			panic(err)
-		}
-	case cfg.TransportInfo.FlagCreateMethod != "":
-		if err := createFileTransport(data, transportTemplateCreateMethod); err != nil {
-			panic(err)
-		}
-	}
-
-	// color.New().Add(color.Reset, color.Bold, color.FgHiBlue).
-	// 	Print("\n" + st.layer + " transport layer structure created successfully!\n\n")
+	color.New().Add(color.Reset, color.Bold, color.FgHiGreen).Print("Transport layer structure created successfully!\n")
 }
 
 func createFileTransport(data *webTransportTemplateData, templates []Template) error {
@@ -95,12 +105,12 @@ func createFileTransport(data *webTransportTemplateData, templates []Template) e
 		log := color.New()
 		if _, err := os.Stat(pathFile); !os.IsNotExist(err) {
 			if !in.CanModify {
-				log.Add(color.Reset, color.FgHiMagenta, color.Bold).Print("\texist\t")
+				log.Add(color.Reset, color.FgHiMagenta, color.Bold).Print("- [exist]\t")
 				log.Add(color.Reset, color.FgHiWhite).Printf("%s\n", pathFile)
 				continue
 			}
 
-			log.Add(color.Reset, color.FgHiYellow, color.Bold).Print("\tupdate\t")
+			log.Add(color.Reset, color.FgHiYellow, color.Bold).Print("- [update]\t")
 			log.Add(color.Reset, color.FgHiWhite).Printf("%s\n", pathFile)
 			return updateFile(pathFile, in, data)
 		}
@@ -109,7 +119,7 @@ func createFileTransport(data *webTransportTemplateData, templates []Template) e
 			return err
 		}
 
-		log.Add(color.Reset, color.FgHiGreen, color.Bold).Print("\tcreated\t")
+		log.Add(color.Reset, color.FgHiGreen, color.Bold).Print("- [created]\t")
 		log.Add(color.Reset, color.FgHiWhite).Printf("%s\n", pathFile)
 	}
 
@@ -139,26 +149,26 @@ func createDir(path string) error {
 }
 
 func updateFile(path string, in Template, data *webTransportTemplateData) (err error) {
-	if !strings.Contains(in.Path, "_controller.go") {
-		return nil
+	if strings.Contains(in.Path, "controller.go") && data.Method != "" {
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+		if err != nil {
+			return err
+		}
+
+		updated := (string(content) + "\n" + templateSail.ControllerMethod)
+		if err = createTemplateParser(path, updated, file, data); err != nil {
+			return err
+		}
+
+		return file.Close()
 	}
 
-	content, err := os.ReadFile(path)
-	if err != nil {
-		return err
-	}
-
-	tmpFile, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
-	if err != nil {
-		return err
-	}
-
-	updated := (string(content) + "\n" + in.Content)
-	if err = createTemplateParser(path, updated, tmpFile, data); err != nil {
-		return err
-	}
-
-	return tmpFile.Close()
+	return nil
 }
 
 func createFile(path, content string, data *webTransportTemplateData) error {
