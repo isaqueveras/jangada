@@ -25,10 +25,16 @@ type Jangada struct {
 	DefaultHost string
 	Database    string
 
-	TransportLayer string
-
 	dirBase       string
-	directoryPath string
+	DirectoryPath string
+
+	TransportInfo TransportInfo
+}
+
+type TransportInfo struct {
+	TransportLayer   string
+	FlagCreateCRUD   bool
+	FlagCreateMethod string
 }
 
 // Init create a new instance
@@ -37,7 +43,7 @@ func Init(dirBase string) {
 		dirBase:     dirBase,
 		AppName:     "my-app",
 		ModuleName:  "my-app",
-		DefaultHost: ":8080",
+		DefaultHost: "localhost:8080",
 		Database:    "postgres",
 	}
 }
@@ -47,11 +53,6 @@ func SetAppName(name string) {
 		return
 	}
 	cfg.AppName = name
-}
-
-// GetDirectoryPath returns the directory path.
-func GetDirectoryPath() string {
-	return cfg.directoryPath
 }
 
 // SetDatabase ...
@@ -64,7 +65,7 @@ func SetDatabase(db string) {
 
 // SetFullDirectoryPath ...
 func SetFullDirectoryPath() {
-	cfg.directoryPath = cfg.dirBase + "/" + strings.ToLower(cfg.AppName)
+	cfg.DirectoryPath = cfg.dirBase + "/" + strings.ToLower(cfg.AppName)
 }
 
 // SetModuleName ...
@@ -112,14 +113,14 @@ func GetModuleName() string {
 func CreateFile(path, tmpl string) {
 	log := color.New()
 
-	dir := fmt.Sprintf("%s/%s", cfg.directoryPath, filepath.Dir(path))
+	dir := fmt.Sprintf("%s/%s", cfg.DirectoryPath, filepath.Dir(path))
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			panic(err)
 		}
 	}
 
-	pathFile := fmt.Sprintf("%s/%s", cfg.directoryPath, path)
+	pathFile := fmt.Sprintf("%s/%s", cfg.DirectoryPath, path)
 	if _, err := os.Stat(pathFile); !os.IsNotExist(err) {
 		log.Add(color.FgHiMagenta, color.Bold).Print("\texist\t")
 		log.Add(color.Reset).Printf("%s\n", path)
@@ -145,10 +146,11 @@ func CreateFile(path, tmpl string) {
 	log.Add(color.FgHiWhite, color.Reset).Printf("%s\n", path)
 }
 
-// SetTransportLayer set the transport layer
-func SetTransportLayer(layer string) {
-	if layer == "" {
-		return
-	}
-	cfg.TransportLayer = layer
-}
+// SetFlagTransportLayer set the transport layer
+func SetFlagTransportLayer(layer string) { cfg.TransportInfo.TransportLayer = layer }
+
+// SetFlagCRUD set the transport layer
+func SetFlagCRUD(crud bool) { cfg.TransportInfo.FlagCreateCRUD = crud }
+
+// SetFlagMethod set the transport layer
+func SetFlagMethod(method string) { cfg.TransportInfo.FlagCreateMethod = method }

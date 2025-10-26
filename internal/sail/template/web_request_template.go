@@ -1,7 +1,7 @@
 // Package template contains templates for a web request
 package template
 
-const WebRequest = `// Package request defines a request for {{ .Entity }}
+const Request = `// Package request defines a request for {{ .Entity }}
 package request
 
 import "{{ .Module }}/internal/application/{{ .Folder }}/command"

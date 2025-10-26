@@ -9,8 +9,8 @@ const (
 	AllTransportLayer TransportLayer = "all"
 	// WebTransportLayer defines the web layer
 	WebTransportLayer TransportLayer = "web"
-	// RestTransportLayer defines the http layer
-	RestTransportLayer TransportLayer = "http"
+	// RestTransportLayer defines the rest layer
+	RestTransportLayer TransportLayer = "rest"
 	// GRPCTransportLayer defines the grpc layer
 	GRPCTransportLayer TransportLayer = "grpc"
 	// GRPCLayer defines the graphql layer
@@ -24,8 +24,8 @@ type TypeFuncCreateLayerTransport func(*SailTransport)
 
 // mapperCreateLayerTransport maps layers to their corresponding creation functions.
 var mapperCreateLayerTransport = map[TransportLayer]TypeFuncCreateLayerTransport{
-	WebTransportLayer:     createWebTransport,
-	RestTransportLayer:    createRestTransport,
+	WebTransportLayer:     createTransport,
+	RestTransportLayer:    createTransport,
 	GRPCTransportLayer:    createGRPCTransport,
 	GraphQLTransportLayer: createGraphQLTransport,
 	WebhookTransportLayer: createWebhookTransport,
