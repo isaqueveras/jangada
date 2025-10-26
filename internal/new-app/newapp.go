@@ -41,7 +41,7 @@ func Execute(cmd *cobra.Command, args []string) {
 
 func createRootDir() {
 	cli.SetFullDirectoryPath()
-	if err := os.MkdirAll(cli.GetDirectoryPath(), 0755); err != nil {
+	if err := os.MkdirAll(cli.GetConfig().DirectoryPath, 0755); err != nil {
 		panic(err)
 	}
 }
@@ -83,7 +83,7 @@ func execGoModTidy() {
 	log.Add(color.FgHiGreen).Print("\trun\t")
 	log.Add(color.Reset).Print("go mod tidy\n\n")
 
-	cmd := fmt.Sprintf("cd %s && go mod tidy", cli.GetDirectoryPath())
+	cmd := fmt.Sprintf("cd %s && go mod tidy", cli.GetConfig().DirectoryPath)
 	command := exec.Command("bash", "-c", cmd)
 	command.Stdout, command.Stderr = os.Stdout, os.Stderr
 
@@ -105,7 +105,7 @@ func copyStaticFiles() {
 	}
 
 	src := fmt.Sprintf("%s/static/background.png", filepath.Dir(cli.RemoveLastSegment(filename)))
-	dst := fmt.Sprintf("%s/public/background.png", cli.GetDirectoryPath())
+	dst := fmt.Sprintf("%s/public/background.png", cli.GetConfig().DirectoryPath)
 
 	if err := cli.CopyFile(src, dst); err != nil {
 		log.Add(color.FgHiRed, color.Bold).Print("\tError: ")

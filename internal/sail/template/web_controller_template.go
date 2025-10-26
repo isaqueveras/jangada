@@ -1,8 +1,8 @@
-// Package template contains templates for a web controller
+// Package template contains templates for a {{ .Layer }} controller
 package template
 
-// WebController is a template for a web controller
-const WebController = `// Package controller defines a web controller for {{ .Entity }}Controller 
+// ControllerTemplate is a template for a {{ .Layer }} controller
+const ControllerTemplate = `// Package controller defines a {{ .Layer }} controller for {{ .Entity }}Controller 
 package controller
 
 import (
@@ -12,7 +12,7 @@ import (
 
 	"{{ .Module }}/core"
 	"{{ .Module }}/internal/application/{{ .Folder }}/orchestrator"
-	"{{ .Module }}/internal/transport/web/{{ .Folder }}/request"
+	"{{ .Module }}/internal/transport/{{ .Layer }}/{{ .Folder }}/request"
 )
 
 // {{ .Entity }}Controller is a controller for {{ ToLower .Entity }}
@@ -132,5 +132,11 @@ func (c *{{ .Entity }}Controller) Delete(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusNoContent, nil)
+}
+`
+
+const ControllerMethod string = `// {{ .Method }} ...
+func (c *{{ .Entity }}Controller) {{ .Method }}(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 `

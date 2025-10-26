@@ -61,9 +61,8 @@ func main() {
 	}
 
 	commandTransport.Flags().String("layer", "web", "choose transport layer")
-	commandTransport.PreRun = func(cmd *cobra.Command, args []string) {
-		cli.SetTransportLayer(cmd.Flag("layer").Value.String())
-	}
+	commandTransport.Flags().Bool("crud", false, "create a crud transport layer")
+	commandTransport.Flags().String("method", "MyMethod", "create a method in transport layer")
 
 	commandSail.AddCommand(commandTransport)
 	root.AddCommand(commandNew, commandSail)

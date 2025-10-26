@@ -15,5 +15,9 @@ func main() {
 	conn := database.NewConnectionPool(server.Config().GetDatabases()...)
 	defer conn.CloseConnections()
 
+	// Uncomment the code below to enable the transport layer
+	// transport.Handler(server)
+
 	server.Init()
-}`
+}
+`

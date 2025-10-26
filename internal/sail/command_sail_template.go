@@ -5,23 +5,32 @@ import "github.com/isaqueveras/jangada/internal/sail/template"
 
 // Template defines the template structure
 type Template struct {
-	Path    string
-	Content string
+	Path, Content string
+	CanModify     bool
 }
 
-// WebTransportTemplate holds templates for generating transport layer files
-var WebTransportTemplate = []Template{
-	{"internal/transport/handler.go", template.HandlerController},
-	{"internal/transport/web/handler.go", template.WebHandlerController},
+// transportTemplateCRUD holds templates for generating transport layer files for crud
+var transportTemplateCRUD = []Template{
+	{"internal/transport/handler.go", template.HandlerController, false},
+	{"internal/transport/{{ .Layer }}/handler.go", template.HandlerLayerController, false},
 
-	{"internal/transport/{{ .Layer }}/{{ .Folder }}/controller/{{ ToLower .Entity }}_controller.go", template.WebController},
-	{"internal/transport/{{ .Layer }}/{{ .Folder }}/request/{{ ToLower .Entity }}_request.go", template.WebRequest},
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/controller/{{ ToLower .Entity }}_controller.go", template.ControllerTemplate, false},
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/request/{{ ToLower .Entity }}_request.go", template.Request, false},
 
-	{"internal/application/{{ .Folder }}/orchestrator/{{ ToLower .Entity }}_orchestrator.go", template.ApplicationOrchestrator},
-	{"internal/application/{{ .Folder }}/command/{{ ToLower .Entity }}_command.go", template.ApplicationCommand},
-	{"internal/application/{{ .Folder }}/query/{{ ToLower .Entity }}_query.go", template.ApplicationQuery},
+	{"internal/application/{{ .Folder }}/orchestrator/{{ ToLower .Entity }}_orchestrator.go", template.ApplicationOrchestrator, false},
+	{"internal/application/{{ .Folder }}/command/{{ ToLower .Entity }}_command.go", template.ApplicationCommand, false},
+	{"internal/application/{{ .Folder }}/query/{{ ToLower .Entity }}_query.go", template.ApplicationQuery, false},
 
-	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/mapper/{{ ToLower .Entity }}_mapper.go", `package mapper`},
-	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/response/{{ ToLower .Entity }}_response.go", `package response`},
-	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/view/{{ ToLower .Entity }}_view.go", `package view`},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/mapper/{{ ToLower .Entity }}_mapper.go", `package mapper`, false},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/response/{{ ToLower .Entity }}_response.go", `package response`, false},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/view/{{ ToLower .Entity }}_view.go", `package view`, false},
+}
+
+// transportTemplateCreateMethod holds templates for generating transport layer files for creating a method
+var transportTemplateCreateMethod = []Template{
+	// {"internal/transport/handler.go", template.HandlerController, false},
+	// {"internal/transport/{{ .Layer }}/handler.go", template.HandlerLayerController, false},
+
+	{"internal/transport/{{ .Layer }}/{{ .Folder }}/controller/{{ ToLower .Entity }}_controller.go", template.ControllerMethod, true},
+	// {"internal/transport/{{ .Layer }}/{{ .Folder }}/request/{{ ToLower .Entity }}_request.go", template.Request, false},
 }
