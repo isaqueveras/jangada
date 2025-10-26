@@ -1,0 +1,45 @@
+internal2
+├── application
+│   └── catalog
+│       └── company
+│           ├── mapper.go
+│           ├── model.go
+│           ├── orchestrator.go
+│           └── service.go
+├── domain
+│   └── catalog
+│       └── company
+│           ├── entity.go
+│           ├── factory.go
+│           ├── repository.go
+│           └── valueobject.go
+├── infrastructure
+│   └── catalog
+│       └── company
+│           ├── grpc
+│           │   └── data.go
+│           ├── http
+│           │   └── data.go
+│           ├── postgres
+│           │   └── data.go
+│           ├── redis
+│           │   └── data.go
+│           ├── event.go
+│           ├── mapper.go
+│           ├── model.go
+│           └── repository.go
+└── transport
+    ├── rest
+    │   └── catalog
+    │       └── company
+    │           ├── controller.go
+    │           └── model.go
+    └── web
+        └── catalog
+            └── company
+                ├── component.go
+                ├── controller.go
+                ├── model.go
+                └── view.go
+
+20 directories, 22 files
