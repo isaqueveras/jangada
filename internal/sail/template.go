@@ -3,6 +3,10 @@ package sail
 
 import "github.com/isaqueveras/jangada/internal/sail/template"
 
+type info struct {
+	Layer, Folder, Entity, Module, Method string
+}
+
 // Template defines the template structure
 type Template struct {
 	Path, Content string
@@ -11,14 +15,12 @@ type Template struct {
 
 var transportTemplateRest = []Template{
 	{
-		Path:      "internal/transport/handler.go",
-		Content:   template.HandlerController,
-		CanModify: false,
+		Path:    "internal/transport/handler.go",
+		Content: template.HandlerController,
 	},
 	{
-		Path:      "internal/transport/rest/handler.go",
-		Content:   template.HandlerLayerController,
-		CanModify: false,
+		Path:    "internal/transport/rest/handler.go",
+		Content: template.HandlerLayerController,
 	},
 	{
 		Path:      "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller.go",
@@ -26,9 +28,31 @@ var transportTemplateRest = []Template{
 		CanModify: true,
 	},
 	{
-		Path:      "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller_test.go",
-		Content:   template.ControllerTestTemplate,
-		CanModify: false,
+		Path:    "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller_test.go",
+		Content: template.ControllerTestTemplate,
+	},
+}
+
+var applicationTemplate = []Template{
+	{
+		Path:    "internal/application/builder.go",
+		Content: template.ApplicationBuilder,
+	},
+	{
+		Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/service.go",
+		Content: template.ApplicationService,
+	},
+	{
+		Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/orchestrator.go",
+		Content: template.ApplicationOrchestrator,
+	},
+	{
+		Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/model.go",
+		Content: "package {{ ToLower .Entity }}",
+	},
+	{
+		Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/mapper.go",
+		Content: "package {{ ToLower .Entity }}",
 	},
 }
 

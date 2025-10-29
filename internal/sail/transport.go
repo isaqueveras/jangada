@@ -22,8 +22,8 @@ type SailTransport struct {
 	pathDir, folder, entity, module, layer string
 }
 
-// Execute is the handler for the 'sail transport' command.
-func Execute(cmd *cobra.Command, args []string) {
+// Transport is the handler for the 'sail transport' command.
+func Transport(cmd *cobra.Command, args []string) {
 	cli.SetFlagTransportLayer(cmd.Flag("layer").Value.String())
 	cli.SetTransportFlagMethodName(cmd.Flag("name").Value.String())
 
@@ -40,8 +40,32 @@ func Execute(cmd *cobra.Command, args []string) {
 	mapperCreateLayerTransport[cfg.TransportInfo.FlagTransportLayer](st)
 }
 
-type webTransportTemplateData struct {
-	Layer, Folder, Entity, Module, Method string
+const (
+	// allTransportLayer defines all layers
+	allTransportLayer string = "all"
+	// webTransportLayer defines the web layer
+	webTransportLayer string = "web"
+	// restTransportLayer defines the rest layer
+	restTransportLayer string = "rest"
+	// gRPCTransportLayer defines the grpc layer
+	gRPCTransportLayer string = "grpc"
+	// GRPCLayer defines the graphql layer
+	graphQLTransportLayer string = "graphql"
+	// webhookTransportLayer defines the webhook layer
+	webhookTransportLayer string = "webhook"
+)
+
+// TypeFuncCreateLayerTransport defines a function type for creating transport layers.
+type TypeFuncCreateLayerTransport func(*SailTransport)
+
+// mapperCreateLayerTransport maps layers to their corresponding creation functions.
+var mapperCreateLayerTransport = map[string]TypeFuncCreateLayerTransport{
+	webTransportLayer:     createTransport,
+	restTransportLayer:    createTransport,
+	gRPCTransportLayer:    createGRPCTransport,
+	graphQLTransportLayer: createGraphQLTransport,
+	webhookTransportLayer: createWebhookTransport,
+	allTransportLayer:     createAllTransport,
 }
 
 // createTransport generates the transport layer structure.
@@ -50,7 +74,7 @@ func createTransport(st *SailTransport) {
 		cfg  = cli.GetConfig()
 		log  = color.New()
 		err  error
-		data = &webTransportTemplateData{
+		data = &info{
 			Folder: st.folder,
 			Entity: strings.ToLower(st.entity),
 			Module: cli.GetModuleName(),
@@ -69,12 +93,12 @@ func createTransport(st *SailTransport) {
 
 	switch {
 	case createStructureController:
-		err = createFileTransport(data, transportTemplateRest)
+		err = createFileForTemplate(data, transportTemplateRest)
 
 	case createMethodController:
 		switch st.layer {
 		case restTransportLayer:
-			err = createFileTransport(data, transportTemplateRest)
+			err = createFileForTemplate(data, transportTemplateRest)
 		default:
 			err = errors.New("only rest transport layer is supported")
 		}
@@ -91,7 +115,7 @@ func createTransport(st *SailTransport) {
 	color.New().Add(color.Reset, color.Bold, color.FgHiGreen).Print("Transport layer structure created successfully!\n")
 }
 
-func createFileTransport(data *webTransportTemplateData, templates []Template) error {
+func createFileForTemplate(data *info, templates []Template) error {
 	for _, in := range templates {
 		pathFile, err := createPath(in.Path, data)
 		if err != nil {
@@ -126,7 +150,7 @@ func createFileTransport(data *webTransportTemplateData, templates []Template) e
 	return nil
 }
 
-func createPath(key string, data *webTransportTemplateData) (content string, err error) {
+func createPath(key string, data *info) (content string, err error) {
 	funcs := template.FuncMap{
 		"ToLower": strings.ToLower,
 	}
@@ -148,7 +172,7 @@ func createDir(path string) error {
 	return os.MkdirAll(filepath.Dir(strings.ToLower(path)), 0755)
 }
 
-func updateFile(path string, in Template, data *webTransportTemplateData) (err error) {
+func updateFile(path string, in Template, data *info) (err error) {
 	if strings.Contains(in.Path, "controller.go") && data.Method != "" {
 		content, err := os.ReadFile(path)
 		if err != nil {
@@ -171,7 +195,7 @@ func updateFile(path string, in Template, data *webTransportTemplateData) (err e
 	return nil
 }
 
-func createFile(path, content string, data *webTransportTemplateData) error {
+func createFile(path, content string, data *info) error {
 	file, err := os.Create(strings.ToLower(path))
 	if err != nil {
 		return err
@@ -181,7 +205,7 @@ func createFile(path, content string, data *webTransportTemplateData) error {
 	return createTemplateParser(path, content, file, data)
 }
 
-func createTemplateParser(path, content string, file *os.File, data *webTransportTemplateData) (err error) {
+func createTemplateParser(path, content string, file *os.File, data *info) (err error) {
 	funcs := template.FuncMap{
 		"ToLower": strings.ToLower,
 	}
