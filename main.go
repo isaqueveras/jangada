@@ -44,27 +44,46 @@ func main() {
 	}
 
 	commandSail := &cobra.Command{
-		Use:        "sail",
-		Short:      "Create layer for bounded context",
-		Example:    "jangada sail",
-		ArgAliases: []string{"transport"},
-		Aliases:    []string{"s"},
+		Use:     "sail",
+		Short:   "Create layer for bounded context",
+		Example: "jangada sail",
+		Aliases: []string{"s"},
+		ArgAliases: []string{
+			"transport",
+			"application",
+		},
 	}
 
-	commandTransport := &cobra.Command{
-		Use:       "transport",
-		Short:     "Create transport layer",
-		Args:      cobra.RangeArgs(1, 2),
-		Example:   "jangada sail transport catalog/company --layer={web,rest}",
-		Run:       sail.Execute,
-		ValidArgs: []cobra.Completion{"web", "rest"},
+	{
+		commandTransport := &cobra.Command{
+			Use:       "transport",
+			Short:     "Create transport layer",
+			Args:      cobra.RangeArgs(1, 2),
+			Example:   "jangada sail transport catalog/company --layer={web,rest}",
+			Run:       sail.Transport,
+			ValidArgs: []cobra.Completion{"web", "rest"},
+		}
+
+		commandTransport.Flags().String("layer", "web", "choose transport layer")
+		commandTransport.Flags().String("name", "", "create a method/router in controller")
+
+		commandSail.AddCommand(commandTransport)
 	}
 
-	commandTransport.Flags().String("layer", "web", "choose transport layer")
-	commandTransport.Flags().String("name", "", "create a method/router in controller")
+	{
+		commandApplication := &cobra.Command{
+			Use:     "application",
+			Short:   "Create application layer",
+			Aliases: []string{"app"},
+			Args:    cobra.RangeArgs(1, 2),
+			Example: "jangada sail application catalog/company --service=CreateCompany",
+			Run:     sail.Application,
+		}
 
-	commandSail.AddCommand(commandTransport)
+		commandApplication.Flags().String("service", "", "create a new service in application")
+		commandSail.AddCommand(commandApplication)
+	}
+
 	root.AddCommand(commandNew, commandSail)
-
 	root.Execute()
 }
