@@ -28,12 +28,17 @@ type Jangada struct {
 	dirBase       string
 	DirectoryPath string
 
-	TransportInfo TransportInfo
+	TransportInfo   TransportInfo
+	ApplicationInfo ApplicationInfo
 }
 
 type TransportInfo struct {
 	FlagTransportLayer string
 	FlagMethodName     string
+}
+
+type ApplicationInfo struct {
+	FlagService string
 }
 
 // Init create a new instance
@@ -47,6 +52,7 @@ func Init(dirBase string) {
 	}
 }
 
+// SetAppName ...
 func SetAppName(name string) {
 	if name == "" {
 		return
@@ -68,12 +74,12 @@ func SetFullDirectoryPath() {
 }
 
 // SetModuleName ...
-func SetModuleName(module string) {
-	if module == "" {
+func SetModuleName(mod string) {
+	if mod == "" {
 		cfg.ModuleName = cfg.AppName
 		return
 	}
-	cfg.ModuleName = module
+	cfg.ModuleName = mod
 }
 
 // SetDefaultHost ...
@@ -137,7 +143,7 @@ func CreateFile(path, tmpl string) {
 		panic(err)
 	}
 
-	if err := t.Execute(file, cfg); err != nil {
+	if err = t.Execute(file, cfg); err != nil {
 		panic(err)
 	}
 
@@ -150,3 +156,6 @@ func SetFlagTransportLayer(layer string) { cfg.TransportInfo.FlagTransportLayer 
 
 // SetTransportFlagMethodName set the transport layer
 func SetTransportFlagMethodName(method string) { cfg.TransportInfo.FlagMethodName = method }
+
+// SetApplicationFlagService set the transport layer
+func SetApplicationFlagService(service string) { cfg.ApplicationInfo.FlagService = service }
