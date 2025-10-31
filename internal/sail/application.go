@@ -10,25 +10,14 @@ func Application(cmd *cobra.Command, args []string) {
 	cli.SetApplicationFlagService(cmd.Flag("service").Value.String())
 
 	cfg := cli.GetConfig()
-	folder, entity := getFolderAndEntityToTransport(args...)
-
 	if cfg.ApplicationInfo.FlagService != "" {
 		cmd.PrintErrln("not implemented yet")
 		return
 	}
 
-	info := &info{
-		Folder: folder,
-		Entity: entity,
-		Module: cli.GetModuleName(),
-	}
-
-	if err := createAllApplication(info); err != nil {
+	folder, entity := getFolderAndEntityToTransport(args...)
+	info := &info{Folder: folder, Entity: entity, Module: cli.GetModuleName()}
+	if err := createFileForTemplate(info, applicationTemplate); err != nil {
 		cmd.PrintErrln(err)
-		return
 	}
-}
-
-func createAllApplication(data *info) error {
-	return createFileForTemplate(data, applicationTemplate)
 }
