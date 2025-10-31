@@ -60,3 +60,26 @@ var applicationTemplate = []Template{
 	// 	Content: "package {{ ToLower .Entity }}",
 	// },
 }
+
+var domainTemplate = []Template{
+	{
+		Path:    "internal/domain/{{ ToLower .Folder }}/{{ ToLower .Entity }}/entity.go",
+		Content: "package {{ ToLower .Entity }}",
+	},
+	{
+		Path:    "internal/domain/{{ ToLower .Folder }}/{{ ToLower .Entity }}/factory.go",
+		Content: "package {{ ToLower .Entity }}",
+	},
+	{
+		Path:    "internal/domain/{{ ToLower .Folder }}/{{ ToLower .Entity }}/interface.go",
+		Content: "package {{ ToLower .Entity }}",
+	},
+	{
+		Path:    "internal/domain/{{ ToLower .Folder }}/{{ ToLower .Entity }}/service.go",
+		Content: "package {{ ToLower .Entity }}",
+	},
+	{
+		Path:    "internal/domain/{{ ToLower .Folder }}/{{ ToLower .Entity }}/valueobject.go",
+		Content: "package {{ ToLower .Entity }}",
+	},
+}
