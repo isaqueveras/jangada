@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 
 	cli "github.com/isaqueveras/jangada/internal"
-	temp "github.com/isaqueveras/jangada/internal/template"
+	newapp "github.com/isaqueveras/jangada/internal/template/new-app"
 )
 
 func Execute(cmd *cobra.Command, args []string) {
@@ -21,6 +21,9 @@ func Execute(cmd *cobra.Command, args []string) {
 	}
 
 	cli.SetAppName(args[0])
+	cli.SetDefaultHost(cmd.Flag("host").Value.String())
+	cli.SetDatabase(cmd.Flag("db").Value.String())
+	cli.SetModuleName(cmd.Flag("mod").Value.String())
 
 	createRootDir()
 	createRootFiles()
@@ -49,8 +52,7 @@ func createRootDir() {
 func createRootFiles() {
 	log := color.New()
 	log.Add(color.Bold, color.FgHiBlue).Print("\nInstalling the project...\n\n")
-
-	for path, tmpl := range temp.GetTemplateForNewApp() {
+	for path, tmpl := range newapp.Template {
 		cli.CreateFile(path, tmpl)
 	}
 }
