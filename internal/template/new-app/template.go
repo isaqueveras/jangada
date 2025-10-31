@@ -37,22 +37,8 @@ var Template = map[string]string{
 	"web/layouts/welcome.templ":   tmplWebLayoutsWelcome,  // contains welcome page of the app
 	"web/layouts/page.templ":      tmplWebLayoutsPage,     // contains page of the app
 	"web/layouts/not_found.templ": tmplWebLayoutsNotFound, // contains not found page of the app
+
+	"internal/application/builder.go":    tmplApplicationBuilder,    // contains builder of the app
+	"internal/domain/builder.go":         tmplDomainBuilder,         // contains builder of the domain
+	"internal/infrastructure/builder.go": tmplInfrastructureBuilder, // contains builder of the infrastructure
 }
-
-// "bin/": "",
-// ".devcontainer/devcontainer.yaml": "",
-
-// "config/environment/development.go": "package environment",
-// "config/environment/production.go":  "package environment",
-// "config/environment/test.go":        "package environment",
-
-// "cmd/app/app.go":  tmplAppApp,  // contains app of the app
-
-// "db/schema.go": "package db",
-
-// "docs/docs.go":     "package docs",
-// "helper/helper.go": "package helper",
-
-// "internal/.keep": "",
-
-// "web/utils/templui.go": "", // contains templui of the app
