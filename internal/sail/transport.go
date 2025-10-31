@@ -89,8 +89,6 @@ func createTransport(st *SailTransport) {
 	// command: jangada sail transport order/pay --name=SavePayment --layer={rest}
 	createMethodController := (cfg.TransportInfo.FlagMethodName != "")
 
-	log.Add(color.Bold, color.FgHiGreen).Print("Creating transport layer structure...\n")
-
 	switch {
 	case createStructureController:
 		err = createFileForTemplate(data, transportTemplateRest)
@@ -111,8 +109,6 @@ func createTransport(st *SailTransport) {
 		log.Add(color.Reset, color.FgHiRed).Println("Error: " + err.Error())
 		return
 	}
-
-	color.New().Add(color.Reset, color.Bold, color.FgHiGreen).Print("Transport layer structure created successfully!\n")
 }
 
 func createFileForTemplate(data *info, templates []Template) error {
