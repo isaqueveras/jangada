@@ -44,6 +44,7 @@ func main() {
 		ArgAliases: []string{
 			"transport",
 			"application",
+			"domain",
 		},
 	}
 
@@ -52,7 +53,7 @@ func main() {
 			Use:       "transport",
 			Short:     "Create transport layer",
 			Args:      cobra.RangeArgs(1, 2),
-			Example:   "jangada sail transport catalog/company --layer={web,rest}",
+			Example:   "jangada sail transport crm/customer --layer={web,rest}",
 			Run:       sail.Transport,
 			ValidArgs: []cobra.Completion{"web", "rest"},
 		}
@@ -69,13 +70,21 @@ func main() {
 			Short:   "Create application layer",
 			Aliases: []string{"app"},
 			Args:    cobra.RangeArgs(1, 2),
-			Example: "jangada sail application catalog/company --service=CreateCompany",
+			Example: "jangada sail application crm/customer --service=CreateCompany",
 			Run:     sail.Application,
 		}
 
 		commandApplication.Flags().String("service", "", "create a new service in application")
 		commandSail.AddCommand(commandApplication)
 	}
+
+	commandSail.AddCommand(&cobra.Command{
+		Use:     "domain",
+		Short:   "Create domain layer",
+		Args:    cobra.RangeArgs(1, 2),
+		Example: "jangada sail domain crm/customer",
+		Run:     sail.Domain,
+	})
 
 	root.AddCommand(commandNew, commandSail)
 	root.Execute()

@@ -113,7 +113,7 @@ func createTransport(st *SailTransport) {
 
 func createFileForTemplate(data *info, templates []Template) error {
 	for _, in := range templates {
-		pathFile, err := createPath(in.Path, data)
+		pathFile, err := createPath(in.path, data)
 		if err != nil {
 			return err
 		}
@@ -124,7 +124,7 @@ func createFileForTemplate(data *info, templates []Template) error {
 
 		log := color.New()
 		if _, err := os.Stat(pathFile); !os.IsNotExist(err) {
-			if !in.CanModify {
+			if !in.canModify {
 				log.Add(color.Reset, color.FgHiMagenta, color.Bold).Print("- [exist]\t")
 				log.Add(color.Reset, color.FgHiWhite).Printf("%s\n", pathFile)
 				continue
@@ -135,7 +135,7 @@ func createFileForTemplate(data *info, templates []Template) error {
 			return updateFile(pathFile, in, data)
 		}
 
-		if err = createFile(pathFile, in.Content, data); err != nil {
+		if err = createFile(pathFile, in.content, data); err != nil {
 			return err
 		}
 
@@ -169,7 +169,7 @@ func createDir(path string) error {
 }
 
 func updateFile(path string, in Template, data *info) (err error) {
-	if strings.Contains(in.Path, "controller.go") && data.Method != "" {
+	if strings.Contains(in.path, "controller.go") && data.Method != "" {
 		content, err := os.ReadFile(path)
 		if err != nil {
 			return err

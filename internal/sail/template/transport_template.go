@@ -67,13 +67,13 @@ import (
 	"{{ .Module }}/internal/application"
 	"{{ .Module }}/pkg/database"
 
-	customerApp "{{ .Module }}/internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}"
-	customerTransport "{{ .Module }}/internal/transport/{{ ToLower .Layer }}/{{ ToLower .Folder }}/{{ ToLower .Entity }}"
+	{{ ToLower .Entity }}App "{{ .Module }}/internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}"
+	{{ ToLower .Entity }}Transport "{{ .Module }}/internal/transport/{{ ToLower .Layer }}/{{ ToLower .Folder }}/{{ ToLower .Entity }}"
 )
 
 // Handler builds transport handlers and registers them to the core router.
 func Handler(core *core.Core, conn database.ConnectionPool) {
-	{{ ToLower .Entity }}Transport.NewController(core, customerApp.NewOrchestrator(conn, application.New()))
+	{{ ToLower .Entity }}Transport.NewController(core, {{ ToLower .Entity }}App.NewOrchestrator(conn, application.NewService()))
 }
 `
 

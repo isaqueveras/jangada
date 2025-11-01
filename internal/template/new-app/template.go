@@ -38,7 +38,7 @@ var Template = map[string]string{
 	"web/layouts/page.templ":      tmplWebLayoutsPage,     // contains page of the app
 	"web/layouts/not_found.templ": tmplWebLayoutsNotFound, // contains not found page of the app
 
-	"internal/application/builder.go":    tmplApplicationBuilder,    // contains builder of the app
-	"internal/domain/builder.go":         tmplDomainBuilder,         // contains builder of the domain
-	"internal/infrastructure/builder.go": tmplInfrastructureBuilder, // contains builder of the infrastructure
+	"internal/application/service.go":       tmplApplicationService,       // contains service builder of the app
+	"internal/domain/interface.go":          tmplDomainInterface,          // contains interface of the domain
+	"internal/infrastructure/repository.go": tmplInfrastructureRepository, // contains repository builder of the infrastructure
 }

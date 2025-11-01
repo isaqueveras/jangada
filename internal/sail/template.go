@@ -3,60 +3,31 @@ package sail
 
 import "github.com/isaqueveras/jangada/internal/sail/template"
 
-type info struct {
-	Layer, Folder, Entity, Module, Method string
-}
+type info struct{ Layer, Folder, Entity, Module, Method string }
 
 // Template defines the template structure
 type Template struct {
-	Path, Content string
-	CanModify     bool
-}
-
-var transportTemplateRest = []Template{
-	{
-		Path:    "internal/transport/handler.go",
-		Content: template.HandlerController,
-	},
-	{
-		Path:    "internal/transport/rest/handler.go",
-		Content: template.HandlerLayerController,
-	},
-	{
-		Path:      "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller.go",
-		Content:   template.ControllerTemplate,
-		CanModify: true,
-	},
-	// {
-	// 	Path:    "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller_test.go",
-	// 	Content: template.ControllerTestTemplate,
-	// },
+	path, content string
+	canModify     bool
 }
 
 var applicationTemplate = []Template{
-	{
-		Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/service.go",
-		Content: template.ApplicationService,
-	},
-	// {
-	// 	Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/service_test.go",
-	// 	Content: "package {{ ToLower .Entity }}_test",
-	// },
-	{
-		Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/orchestrator.go",
-		Content: template.ApplicationOrchestrator,
-	},
-	// {
-	// 	Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/orchestrator_test.go",
-	// 	Content: "package {{ ToLower .Entity }}_test",
-	// },
+	{path: "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/orchestrator.go", content: template.ApplicationOrchestrator},
+}
 
-	// {
-	// 	Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/model.go",
-	// 	Content: "package {{ ToLower .Entity }}",
-	// },
-	// {
-	// 	Path:    "internal/application/{{ ToLower .Folder }}/{{ ToLower .Entity }}/mapper.go",
-	// 	Content: "package {{ ToLower .Entity }}",
-	// },
+var (
+	domainPath     = "internal/domain/{{ ToLower .Folder }}/{{ ToLower .Entity }}"
+	domainTemplate = []Template{
+		{path: domainPath + "/entity.go", content: "package {{ ToLower .Entity }}"},
+		{path: domainPath + "/factory.go", content: "package {{ ToLower .Entity }}"},
+		{path: domainPath + "/valueobject.go", content: "package {{ ToLower .Entity }}"},
+		{path: domainPath + "/repository.go", content: template.DomainRepository},
+		{path: domainPath + "/service.go", content: template.DomainService},
+	}
+)
+
+var transportTemplateRest = []Template{
+	{path: "internal/transport/handler.go", content: template.HandlerController},
+	{path: "internal/transport/rest/handler.go", content: template.HandlerLayerController},
+	{path: "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller.go", content: template.ControllerTemplate, canModify: true},
 }

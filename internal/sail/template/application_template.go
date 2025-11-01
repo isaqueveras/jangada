@@ -15,44 +15,36 @@ type Orchestrator interface{}
 // orchestrator is a orchestrator for {{ ToLower .Entity }} that implements the Orchestrator interface
 type orchestrator struct {
 	conn database.ConnectionPool
-	srv  domain.ServiceBuilder
+	srv  domain.Services
 }
 
 // NewOrchestrator creates a new instance of orchestrator with the given repository
-func NewOrchestrator(conn database.ConnectionPool, srv domain.ServiceBuilder) Orchestrator {
+func NewOrchestrator(conn database.ConnectionPool, srv domain.Services) Orchestrator {
 	return &orchestrator{conn: conn, srv: srv}
 }
 `
 
-const ApplicationService = `// Package {{ ToLower .Entity }} defines an service for {{ ToLower .Entity }}
+// DomainService is a template for a domain service
+const DomainService = `// Package {{ ToLower .Entity }} contains the business logic for the {{ ToLower .Entity }} domain
 package {{ ToLower .Entity }}
 
+// Service is the interface for the {{ ToLower .Entity }} service
+type Service interface{}
+
 type service struct {
-	// repository {{ ToLower .Entity }}.Repository
+	repository Repository
 }
 
 // NewService creates a new instance of service with the given repository
-func NewService( /* repository {{ ToLower .Entity }}.Repository */ ) *service {
-	return &service{
-		// repository: repository
-	}
+func NewService(repository Repository) *service {
+	return &service{repository: repository}
 }
 `
 
-const ApplicationBuilder = `// Package application provides application management
-package application
+// DomainRepository is a template for a domain repository
+const DomainRepository = `// Package {{ ToLower .Entity }} contains the repository for the {{ ToLower .Entity }} domain
+package {{ ToLower .Entity }}
 
-import (
-	"{{ .ModuleName }}/internal/domain"
-	"{{ .ModuleName }}/internal/infrastructure"
-)
-
-type builder struct {
-	repository domain.RepositoryBuilder
-}
-
-// New creates a new instance of builder with the given repository
-func New() *builder {
-	return &builder{repository: infrastructure.New()}
-}
+// Repository defines the interface for the {{ ToLower .Entity }} repository
+type Repository interface{}
 `
