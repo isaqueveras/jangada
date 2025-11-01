@@ -22,7 +22,7 @@ func main() {
 }
 `
 
-const tmplApplicationBuilder = `// Package application provides application management
+const tmplApplicationService = `// Package application provides application management
 package application
 
 import (
@@ -31,28 +31,26 @@ import (
 )
 
 type builder struct {
-	repository domain.RepositoryBuilder
+	repository domain.Repositories
 }
 
-// New creates a new instance of builder with the given repository
-func New() *builder {
-	return &builder{
-		repository: infrastructure.New(),
-	}
+// NewService creates a new instance of builder with the given repository
+func NewService() *builder {
+	return &builder{repository: infrastructure.New()}
 }
 `
 
-const tmplDomainBuilder = `// Package domain defines the interfaces for building repositories and services.
+const tmplDomainInterface = `// Package domain defines the interfaces for building repositories and services.
 package domain
 
-// RepositoryBuilder is a builder for repository
-type RepositoryBuilder interface{}
+// Repositories is a builder for repository
+type Repositories interface{}
 
-// ServiceBuilder is a builder for service
-type ServiceBuilder interface{}
+// Services is a builder for service
+type Services interface{}
 `
 
-const tmplInfrastructureBuilder = `// Package infrastructure provides infrastructure services and builders
+const tmplInfrastructureRepository = `// Package infrastructure provides infrastructure services and builders
 package infrastructure
 
 type builder struct{}
