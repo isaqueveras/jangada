@@ -1,5 +1,6 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/isaqueveras/jangada.svg)](https://pkg.go.dev/github.com/isaqueveras/jangada)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/isaqueveras/jangada)](https://goreportcard.com/report/github.com/isaqueveras/jangada)
 
 **🛶 Jangada** is a **Go** web framework full stack, designed for productivity and **DDD best practices**. 
 > Build web apps and APIs quickly with plugins, background jobs, and workflows.
@@ -20,7 +21,7 @@
 
 ---
 
-## Quick Start
+## Install Jangada CLI
 
 ```bash
 # Install Jangada
@@ -37,7 +38,14 @@ $ jangada new mercadolivre
 $ jangada new mercadolivre --mod=github.com/isaqueveras/mercadolivre --host=localhost:8782 --db=postgres
 ```
 
-## Create a new application layer
+## Create a domain layer
+The domain layer is where business rules, entities, repositories, and services should be defined.
+
+```bash
+$ jangada sail domain crm/customer
+```
+
+## Create a application layer
 The application layer is where the orchestrators and services that create flows within the system are concentrated.
 
 ```bash
@@ -47,7 +55,7 @@ $ jangada sail application crm/customer
 $ jangada sail application crm/customer --service=GetAllCustomerByName
 ```
 
-## Create a new transport layer
+## Create a transport layer
 The transport layer is where you control the rest/grpc/web routes that access the application layer.
 
 ```bash
@@ -56,6 +64,3 @@ $ jangada sail transport crm/customer
 # or create a new method in the controller
 $ jangada sail transport crm/customer --layer=rest --name=GetAllCustomerByName
 ```
-
-
-
