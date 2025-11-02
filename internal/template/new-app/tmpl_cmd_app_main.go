@@ -36,7 +36,7 @@ type builder struct {
 
 // NewService creates a new instance of builder with the given repository
 func NewService() *builder {
-	return &builder{repository: infrastructure.New()}
+	return &builder{repository: infrastructure.NewRepository()}
 }
 `
 
@@ -56,7 +56,7 @@ package infrastructure
 type builder struct{}
 
 // New creates a new instance of builder for infrastructure
-func New() *builder {
+func NewRepository() *builder {
 	return &builder{}
 }
 `
