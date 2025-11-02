@@ -2,16 +2,16 @@ internal2
 ├── application
 │   └── catalog
 │       └── company
-│           ├── mapper.go
-│           ├── model.go
 │           ├── orchestrator.go
-│           └── service.go
+│           ├── orchestrator_test.go
 ├── domain
 │   └── catalog
 │       └── company
 │           ├── entity.go
 │           ├── factory.go
 │           ├── repository.go
+│           ├── service.go
+│           ├── service_test.go
 │           └── valueobject.go
 ├── infrastructure
 │   └── catalog
@@ -33,12 +33,14 @@ internal2
     │   └── catalog
     │       └── company
     │           ├── controller.go
+    │           ├── controller_test.go
     │           └── model.go
     └── web
         └── catalog
             └── company
                 ├── component.go
                 ├── controller.go
+                ├── controller_test.go
                 ├── model.go
                 └── view.go
 
