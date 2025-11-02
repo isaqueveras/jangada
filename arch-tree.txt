@@ -3,7 +3,7 @@ internal2
 │   └── catalog
 │       └── company
 │           ├── orchestrator.go
-│           ├── orchestrator_test.go
+│           └── orchestrator_test.go
 ├── domain
 │   └── catalog
 │       └── company
