@@ -1,4 +1,4 @@
-// Package template contains templates for a {{ .Layer }} controller
+// Package template contains templates for transport
 package template
 
 // ControllerTemplate is a template for a {{ .Layer }} controller
