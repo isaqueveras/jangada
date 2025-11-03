@@ -29,7 +29,7 @@ go install github.com/isaqueveras/jangada@latest
 ```
 
 ## Create a new app
-Create the foundation of an application to build a monolithic or microservice.
+Create the foundation of an application to build a monolithic or microservice
 
 ```bash
 $ jangada new mercadolivre
@@ -39,14 +39,14 @@ $ jangada new mercadolivre --mod=github.com/isaqueveras/mercadolivre --host=loca
 ```
 
 ## Create a domain layer
-The domain layer is where business rules, entities, repositories, and services should be defined.
+The domain layer is where business rules, entities, repositories, and services should be defined
 
 ```bash
 $ jangada sail domain crm/customer
 ```
 
 ## Create a application layer
-The application layer is where the orchestrators and services that create flows within the system are concentrated.
+The application layer is where the orchestrators and services that create flows within the system are concentrated
 
 ```bash
 $ jangada sail application crm/customer
@@ -56,11 +56,18 @@ $ jangada sail application crm/customer --service=GetAllCustomerByName
 ```
 
 ## Create a transport layer
-The transport layer is where you control the rest/grpc/web routes that access the application layer.
+The transport layer is where you control the rest/grpc/web routes that access the application layer
 
 ```bash
 $ jangada sail transport crm/customer
 
 # or create a new method in the controller
 $ jangada sail transport crm/customer --layer=rest --name=GetAllCustomerByName
+```
+
+## Create a infrastructure layer
+The infrastructure layer is where you implement the repository and external calls, such as database access or HTTP/GRPC requests
+
+```bash
+$ jangada sail infrastructure crm/customer
 ```
