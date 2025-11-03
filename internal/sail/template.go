@@ -27,9 +27,9 @@ var (
 )
 
 var infrastructureTemplate = []Template{
-	{path: "internal/infrastructure/{{ ToLower .Folder }}/{{ ToLower .Entity }}/repository.go", content: "package {{ ToLower .Entity }}"},
-	{path: "internal/infrastructure/{{ ToLower .Folder }}/{{ ToLower .Entity }}/postgres/data.go", content: "package postgres"},
-	{path: "internal/infrastructure/{{ ToLower .Folder }}/{{ ToLower .Entity }}/postgres/model.go", content: "package postgres"},
+	{path: "internal/infrastructure/{{ ToLower .Folder }}/{{ ToLower .Entity }}/repository.go", content: template.InfrastructureRepository},
+	{path: "internal/infrastructure/{{ ToLower .Folder }}/{{ ToLower .Entity }}/postgres/data.go", content: template.InfrastructurePostgresData},
+	{path: "internal/infrastructure/{{ ToLower .Folder }}/{{ ToLower .Entity }}/postgres/model.go", content: template.InfrastructurePostgresModel},
 }
 
 var transportTemplateRest = []Template{
