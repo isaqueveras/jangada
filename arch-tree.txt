@@ -1,45 +1,46 @@
-internal2
+internal
 ├── application
-│   └── catalog
-│       └── company
-│           ├── mapper.go
-│           ├── model.go
+│   └── crm
+│       └── customer
 │           ├── orchestrator.go
-│           └── service.go
+│           └── orchestrator_test.go
 ├── domain
-│   └── catalog
-│       └── company
+│   └── crm
+│       └── customer
 │           ├── entity.go
 │           ├── factory.go
 │           ├── repository.go
+│           ├── service.go
+│           ├── service_test.go
 │           └── valueobject.go
 ├── infrastructure
-│   └── catalog
-│       └── company
+│   └── crm
+│       └── customer
 │           ├── grpc
-│           │   └── data.go
+│           │   ├── data.go
+│           │   └── model.go
 │           ├── http
-│           │   └── data.go
+│           │   ├── data.go
+│           │   └── model.go
 │           ├── postgres
-│           │   └── data.go
+│           │   ├── data.go
+│           │   └── model.go
 │           ├── redis
-│           │   └── data.go
-│           ├── event.go
-│           ├── mapper.go
-│           ├── model.go
+│           │   ├── data.go
+│           │   └── model.go
 │           └── repository.go
 └── transport
     ├── rest
-    │   └── catalog
-    │       └── company
+    │   └── crm
+    │       └── customer
     │           ├── controller.go
+    │           ├── controller_test.go
     │           └── model.go
     └── web
-        └── catalog
-            └── company
+        └── crm
+            └── customer
                 ├── component.go
                 ├── controller.go
+                ├── controller_test.go
                 ├── model.go
                 └── view.go
-
-20 directories, 22 files

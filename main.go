@@ -37,15 +37,11 @@ func main() {
 	commandNew.Flags().String("db", "postgres", "--db=postgres")
 
 	commandSail := &cobra.Command{
-		Use:     "sail",
-		Short:   "Create layer for bounded context",
-		Example: "jangada sail",
-		Aliases: []string{"s"},
-		ArgAliases: []string{
-			"transport",
-			"application",
-			"domain",
-		},
+		Use:        "sail",
+		Short:      "Create layer for bounded context",
+		Example:    "jangada sail",
+		Aliases:    []string{"s"},
+		ArgAliases: []string{"transport", "application", "domain", "infrastructure"},
 	}
 
 	{
@@ -53,6 +49,7 @@ func main() {
 			Use:       "transport",
 			Short:     "Create transport layer",
 			Args:      cobra.RangeArgs(1, 2),
+			Aliases:   []string{"t"},
 			Example:   "jangada sail transport crm/customer --layer={web,rest}",
 			Run:       sail.Transport,
 			ValidArgs: []cobra.Completion{"web", "rest"},
@@ -68,7 +65,7 @@ func main() {
 		commandApplication := &cobra.Command{
 			Use:     "application",
 			Short:   "Create application layer",
-			Aliases: []string{"app"},
+			Aliases: []string{"app", "a"},
 			Args:    cobra.RangeArgs(1, 2),
 			Example: "jangada sail application crm/customer --service=CreateCompany",
 			Run:     sail.Application,
@@ -81,9 +78,19 @@ func main() {
 	commandSail.AddCommand(&cobra.Command{
 		Use:     "domain",
 		Short:   "Create domain layer",
+		Aliases: []string{"d"},
 		Args:    cobra.RangeArgs(1, 2),
 		Example: "jangada sail domain crm/customer",
 		Run:     sail.Domain,
+	})
+
+	commandSail.AddCommand(&cobra.Command{
+		Use:     "infrastructure",
+		Short:   "Create infrastructure layer",
+		Aliases: []string{"infra", "i"},
+		Args:    cobra.RangeArgs(1, 2),
+		Example: "jangada sail infrastructure crm/customer",
+		Run:     sail.Infrastructure,
 	})
 
 	root.AddCommand(commandNew, commandSail)

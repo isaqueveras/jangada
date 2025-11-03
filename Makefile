@@ -9,4 +9,9 @@ deps: ### deps tidy + verify
 	go mod tidy && go mod verify
 .PHONY: deps
 
-.PHONY: build help deps
+contributors:
+	@git log --pretty="%an <%ae>%n%cn <%ce>" | sort -u -t '<' -k 2,2 | LC_ALL=C sort | \
+		grep -v "users.noreply.github.com\|GitHub <noreply@github.com>" \
+		> contributors/list
+
+.PHONY: build help deps contributors
