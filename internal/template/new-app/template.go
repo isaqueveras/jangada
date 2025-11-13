@@ -4,21 +4,18 @@ package newapp
 // Template is a map of templates for new app
 var Template = map[string]string{
 	"go.mod":       tmplGoMod,     // contains module of the app
+	".air.toml":    tmplAirToml,   // contains air.toml of the app
 	".gitignore":   tmplGitIgnore, // contains gitignore of the app
-	".env":         "",            // contains env of the app
-	".env.example": "",            // contains env of example of the app
+	".env":         tmplEnv,       // contains env of the app
+	".env.example": tmplEnv,       // contains env of example of the app
 	"Makefile":     tmplMakefile,  // contains makefile of the app
 	"README.md":    tmplReadme,    // contains readme of the app
 
 	"core/core.go": tmplCoreCore, // contains core of the app
-	// "core/plugin.go": tmplCorePlugin, // contains plugin of the app
 
-	"log/access.log": "", // contains access log of the app
-	"log/error.log":  "", // contains error log of the app
+	"config/config.go": tmplConfigConfig, // contains config of the app
 
-	"config/config.go":     tmplConfigConfig,       // contains config of the app
-	"config/database.yaml": tmplConfigDatabaseYAML, // contains database of the app
-	"config/app.yaml":      tmplConfigAppYAML,      // contains app of the app
+	"pkg/metric/metric.go": tmplMetricMetric, // contains metric of the app
 
 	"pkg/database/interface.go":         serviceDatabaseInterfaceTemp,
 	"pkg/database/pool.go":              serviceDatabasePoolTemp,
@@ -26,6 +23,10 @@ var Template = map[string]string{
 	"pkg/database/postgres/postgres.go": serviceDatabasePostgresTemp,
 	"pkg/database/seeds/seeds.go":       serviceDatabaseSeedsTemp,
 	"pkg/database/migrations/.keep":     "",
+
+	"docker/Dockerfile":         tmplDockerfile,
+	"docker/prometheus.yml":     tmplPrometheus,
+	"docker/docker-compose.yml": tmplDockerCompose,
 
 	"cmd/app/main.go": tmplAppMain, // contains main of the app
 
