@@ -12,7 +12,7 @@ import (
 func main() {
 	app := core.New()
 
-	conn := database.NewConnectionPool(app.Config().GetDatabases()...)
+	conn := database.NewConnectionPool(app)
 	defer conn.CloseConnections()
 
 	if err := app.Metrics(); err != nil {
