@@ -1,7 +1,6 @@
 package newapp
 
-const tmplDockerfile = `
-FROM golang:1.24 AS builder
+const tmplDockerfile = `FROM golang:1.24 AS builder
 
 WORKDIR /app
 
@@ -76,9 +75,8 @@ const tmplDockerCompose = `services:
       - "8080:8080"
     environment:
       - CGO_ENABLED=0
-      - ENVIRONMENT=development
-		env_file:
-      - .env
+    env_file:
+      - ../.env
     restart: always
     depends_on:
       - prometheus
@@ -88,7 +86,7 @@ const tmplDockerCompose = `services:
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
+    container_name: prometheus_{{ ToLower .AppName }}
     ports:
       - "9090:9090"
     volumes:
@@ -101,7 +99,7 @@ const tmplDockerCompose = `services:
 
   pushgateway:
     image: prom/pushgateway:latest
-    container_name: pushgateway
+    container_name: pushgateway_{{ ToLower .AppName }}
     ports:
       - "9091:9091"
     restart: always
@@ -110,7 +108,7 @@ const tmplDockerCompose = `services:
 
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: grafana_{{ ToLower .AppName }}
     ports:
       - "3000:3000"
     environment:
