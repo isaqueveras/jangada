@@ -3,10 +3,12 @@ package newapp
 
 // Template is a map of templates for new app
 var Template = map[string]string{
-	"go.mod":     tmplGoMod,     // contains module of the app
-	".gitignore": tmplGitIgnore, // contains gitignore of the app
-	"Makefile":   tmplMakefile,  // contains makefile of the app
-	"README.md":  tmplReadme,    // contains readme of the app
+	"go.mod":       tmplGoMod,     // contains module of the app
+	".gitignore":   tmplGitIgnore, // contains gitignore of the app
+	".env":         "",            // contains env of the app
+	".env.example": "",            // contains env of example of the app
+	"Makefile":     tmplMakefile,  // contains makefile of the app
+	"README.md":    tmplReadme,    // contains readme of the app
 
 	"core/core.go": tmplCoreCore, // contains core of the app
 	// "core/plugin.go": tmplCorePlugin, // contains plugin of the app
