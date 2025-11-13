@@ -10,15 +10,19 @@ import (
 )
 
 func main() {
-	server := core.New()
+	app := core.New()
 
-	conn := database.NewConnectionPool(server.Config().GetDatabases()...)
+	conn := database.NewConnectionPool(app.Config().GetDatabases()...)
 	defer conn.CloseConnections()
 
-	// Uncomment the code below to enable the transport layer
-	// transport.Handler(server, conn)
+	if err := app.Metrics(); err != nil {
+		app.Log().Error("failed to register metrics: " + err.Error())
+	}
 
-	server.Init()
+	// Uncomment the code below to enable the transport layer
+	// transport.Handler(app, conn)
+
+	app.Run()
 }
 `
 
