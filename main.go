@@ -28,11 +28,11 @@ func main() {
 		Use:     "new [name]",
 		Short:   "Create a new app",
 		Args:    cobra.ExactArgs(1),
-		Example: "jangada new myapp --mod=github.com/username/myapp --db=postgres",
+		Example: "jangada new myapp --mod=github.com/username/myapp --db=postgres --host=localhost:8081",
 		Run:     newapp.Execute,
 	}
 
-	commandNew.Flags().String("host", ":8080", "--host=localhost:8080")
+	commandNew.Flags().String("host", "localhost:8080", "--host=localhost:8080")
 	commandNew.Flags().String("mod", "", "--mod=github.com/username/myapp")
 	commandNew.Flags().String("db", "postgres", "--db=postgres")
 
