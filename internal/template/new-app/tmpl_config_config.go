@@ -6,10 +6,9 @@ package config
 import (
 	"fmt"
 	"net/url"
-	"os"
+	"strings"
 
 	"github.com/caarlos0/env/v11"
-	"gopkg.in/yaml.v3"
 )
 
 // NewConfig returns a new config
@@ -49,7 +48,7 @@ func (c *Config) IsTesting() bool {
 }
 
 // GetDatabases returns the databases configuration for the current environment
-func (c *Config) GetDatabases() []database {
+func (c *Config) GetDatabases() []Database {
 	return c.databases
 }
 
@@ -60,6 +59,10 @@ func (a Application) GetPrometheusPushgateway() string {
 
 // LoadDatabase loads the databases configuration for the current environment
 func (c *Config) LoadDatabase(databases ...string) error {
+	if len(databases) == 0 {
+		return fmt.Errorf("no databases provided")
+	}
+
 	for _, name := range databases {
 		db := &Database{}
 		opt := env.Options{Prefix: fmt.Sprintf("%s_", strings.ToUpper(name))}
@@ -68,6 +71,7 @@ func (c *Config) LoadDatabase(databases ...string) error {
 		}
 		c.databases = append(c.databases, *db)
 	}
+
 	return nil
 }
 
@@ -84,18 +88,18 @@ type Application struct {
 
 // Database represents the database connection settings
 type Database struct {
-	Nick               string      ` + "env:\"DB_NICK\"`" + `
-	Name               string      ` + "env:\"DB_NAME\"`" + `
-	Username           string      ` + "env:\"DB_USER\"`" + `
-	Password           string      ` + "env:\"DB_PASS\"`" + `
-	Host               string      ` + "env:\"DB_HOST\"`" + `
-	Port               string      ` + "env:\"DB_PORT\"`" + `
-	MaxConn            int         ` + "env:\"DB_MAX_CONN\"`" + `
-	MaxIdle            int         ` + "env:\"DB_MAX_IDLE\"`" + `
-	ReadOnly           bool        ` + "env:\"DB_READ_ONLY\"`" + `
-	Main               bool        ` + "env:\"DB_MAIN\"`" + `
-	TransactionTimeout int         ` + "env:\"DB_TIMEOUT\"`" + `
-	SSLMode            string      ` + "env:\"DB_SSL_MODE\"`" + `
+	Nick               string      ` + "`env:\"DATABASE_NICK\"`" + `
+	Name               string      ` + "`env:\"DATABASE_NAME\"`" + `
+	Username           string      ` + "`env:\"DATABASE_USER\"`" + `
+	Password           string      ` + "`env:\"DATABASE_PASS\"`" + `
+	Host               string      ` + "`env:\"DATABASE_HOST\"`" + `
+	Port               string      ` + "`env:\"DATABASE_PORT\"`" + `
+	MaxConn            int         ` + "`env:\"DATABASE_MAX_CONN\"`" + `
+	MaxIdle            int         ` + "`env:\"DATABASE_MAX_IDLE\"`" + `
+	ReadOnly           bool        ` + "`env:\"DATABASE_READ_ONLY\"`" + `
+	Main               bool        ` + "`env:\"DATABASE_MAIN\"`" + `
+	TransactionTimeout int         ` + "`env:\"DATABASE_TIMEOUT\"`" + `
+	SSLMode            string      ` + "`env:\"DATABASE_SSL_MODE\"`" + `
 	SSLClient          Certificate
 }
 
@@ -129,8 +133,8 @@ func (d Database) String() string {
 
 // Certificate represents the SSL certificate settings
 type Certificate struct {
-	Certificate          string ` + "`env:\"DB_SSL_CERT\"`" + `
-	PrivateKey           string ` + "`env:\"DB_SSL_KEY\"`" + `
-	CertificateAuthority string ` + "`env:\"DB_SSL_CA\"`" + `
+	Certificate          string ` + "`env:\"DATABASE_SSL_CERT\"`" + `
+	PrivateKey           string ` + "`env:\"DATABASE_SSL_KEY\"`" + `
+	CertificateAuthority string ` + "`env:\"DATABASE_SSL_CA\"`" + `
 }
 `

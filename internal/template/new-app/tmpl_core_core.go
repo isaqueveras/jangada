@@ -44,9 +44,9 @@ func New() *Core {
 	}
 
 	server := &Core{
-		router:  gin.Default(),
-		log:     logg,
-		cfg:     cfg,
+		router: gin.Default(),
+		log:    logg,
+		cfg:    cfg,
 	}
 
 	server.router.Static("public", "public")
