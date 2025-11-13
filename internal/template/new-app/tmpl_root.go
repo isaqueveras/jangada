@@ -49,7 +49,6 @@ const tmplMakefile = `templ:
 	templ generate
 
 dev: templ
-	@echo "> Running project on http://{{ .DefaultHost }}..."
 	@go run cmd/app/main.go 
 
 air:
@@ -68,11 +67,10 @@ test:
 build: clean test
 	@echo "> Building project..."
 	@go run github.com/a-h/templ/cmd/templ@latest generate
-	go build -o ./bin/jangada-app ./cmd/app/main.go
+	go build -o ./bin/{{ ToLower .AppName }}-app ./cmd/app/main.go
 
 run-build: build
-	@echo "> Running project on http://{{ .DefaultHost }}..."
-	./bin/jangada-server
+	./bin/{{ ToLower .AppName }}-server
 
 lint:
 	@echo "> Linting project..."
