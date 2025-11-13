@@ -1,5 +1,3 @@
-// DON'T EDIT THIS FILE!
-
 package newapp
 
 const tmplMetricMetric = `// Package metric contains metrics for the app
