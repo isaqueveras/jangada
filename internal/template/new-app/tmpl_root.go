@@ -79,6 +79,43 @@ lint:
 	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
 
 .PHONY: dev clean test lint build run-build
+
+# --------------- Docker Tools ---------------
+
+DOCKER_COMMAND :=	docker compose -p {{ ToLower .AppName }} -f ./docker/docker-compose.yml
+
+docker-up:
+	@echo "> 🐳 Builds, (re)creates, starts, and attaches to containers for a service..."
+	@$(DOCKER_COMMAND) up -d
+
+docker-down:
+	@echo "> 🐳 Stops containers and removes containers, networks, volumes, and images..."
+	@$(DOCKER_COMMAND) down
+
+docker-build:
+	@echo "> 🐳 Build or rebuild services..."
+	@$(DOCKER_COMMAND) build
+
+docker-start:
+	@echo "> 🐳 Start services..."
+	@$(DOCKER_COMMAND) start
+
+docker-stop:
+	@echo "> 🐳 Stop services..."
+	@$(DOCKER_COMMAND) stop
+
+docker-restart:
+	@echo "> 🐳 Restart service containers..."
+	@$(DOCKER_COMMAND) restart
+
+docker-logs:
+	@echo "> 🐳 View output from containers..."
+	@$(DOCKER_COMMAND) logs
+
+docker-clean:
+	@echo "> 🐳 Remove orphaned containers, volumes, and images...."
+	@$(DOCKER_COMMAND) down -v
+	docker system prune -f
 `
 
 const tmplGitIgnore string = `db/*.db
