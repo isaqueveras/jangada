@@ -52,6 +52,9 @@ dev: templ
 	@echo "> Running project on http://{{ .DefaultHost }}..."
 	@go run cmd/app/main.go 
 
+air:
+	air -c .air.toml
+
 clean:
 	@echo "> Cleaning project..."
 	go clean
