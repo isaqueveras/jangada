@@ -10,17 +10,17 @@ RUN go mod download
 
 COPY ../ ./
 
-RUN go build -o server ./cmd/app
+RUN go build -o app ./cmd/app
 
 FROM gcr.io/distroless/base-debian12
 
 WORKDIR /app
 
-COPY --from=builder /app/server .
+COPY --from=builder /app/app .
 
 EXPOSE 8080
 
-ENTRYPOINT ["./server"]`
+ENTRYPOINT ["./app"]`
 
 const tmplPrometheus = `global:
   scrape_interval: 5s
