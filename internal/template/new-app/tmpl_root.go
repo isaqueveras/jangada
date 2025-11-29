@@ -84,7 +84,11 @@ DOCKER_COMMAND :=	docker compose -p {{ ToLower .AppName }} -f ./docker/docker-co
 
 docker-up:
 	@echo "> 🐳 Builds, (re)creates, starts, and attaches to containers for a service..."
-	@$(DOCKER_COMMAND) up -d
+	@$(DOCKER_COMMAND) up
+
+docker-up-database:
+	@echo "> 🐳 Start database service"
+	@$(DOCKER_COMMAND) up pg_{{ ToLower .AppName }}
 
 docker-down:
 	@echo "> 🐳 Stops containers and removes containers, networks, volumes, and images..."
