@@ -61,16 +61,16 @@ clean:
 
 test:
 	@echo "> Running tests..."
-	go test ./... -coverprofile=coverage.out -covermode=count
-	go tool cover -func=coverage.out
+	go test -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out -o coverage.html
 
 build: clean test
 	@echo "> Building project..."
 	@go run github.com/a-h/templ/cmd/templ@latest generate
-	go build -o ./bin/{{ ToLower .AppName }}-app ./cmd/app/main.go
+	go build -o ./bin/app ./cmd/app/main.go
 
 run-build: build
-	./bin/{{ ToLower .AppName }}-server
+	./bin/app
 
 lint:
 	@echo "> Linting project..."
