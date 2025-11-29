@@ -48,7 +48,7 @@ scrape_configs:
 const tmplDockerCompose = `services:
   pg_{{ ToLower .AppName }}:
     image: postgres:15
-    restart: always
+    restart: no
     container_name: pg_{{ ToLower .AppName }}
     environment:
       POSTGRES_USER: postgres
@@ -77,7 +77,7 @@ const tmplDockerCompose = `services:
       - CGO_ENABLED=0
     env_file:
       - ../.env
-    restart: always
+    restart: no
     depends_on:
       - prometheus
       - pg_{{ ToLower .AppName }}
@@ -91,7 +91,7 @@ const tmplDockerCompose = `services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    restart: always
+    restart: no
     networks:
       - monitor
     depends_on:
@@ -102,7 +102,7 @@ const tmplDockerCompose = `services:
     container_name: pushgateway_{{ ToLower .AppName }}
     ports:
       - "9091:9091"
-    restart: always
+    restart: no
     networks:
       - monitor
 
@@ -117,7 +117,7 @@ const tmplDockerCompose = `services:
       - GF_USERS_ALLOW_SIGN_UP=false
     depends_on:
       - prometheus
-    restart: always
+    restart: no
     networks:
       - monitor
 
