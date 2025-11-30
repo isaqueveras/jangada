@@ -22,34 +22,34 @@ func NewConfig() (*Config, error) {
 
 // Config represents the application configuration
 type Config struct {
-	environment string ` + "`env:\"ENVIRONMENT,required\" envDefault:\"development\"`" + `
-	app         Application
-	databases   []Database
+	Environment string ` + "`env:\"ENVIRONMENT,required\" envDefault:\"development\"`" + `
+	App         Application
+	Databases   []Database
 }
 
 // GetApplication returns the application configuration
 func (c *Config) GetApplication() Application {
-	return c.app
+	return c.App
 }
 
 // IsProduction returns true if the environment is production
 func (c *Config) IsProduction() bool {
-	return c.environment == "production"
+	return c.Environment == "production"
 }
 
 // IsDevelopment returns true if the environment is development
 func (c *Config) IsDevelopment() bool {
-	return c.environment == "development"
+	return c.Environment == "development"
 }
 
 // IsTesting returns true if the environment is testing
 func (c *Config) IsTesting() bool {
-	return c.environment == "testing"
+	return c.Environment == "testing"
 }
 
 // GetDatabases returns the databases configuration for the current environment
 func (c *Config) GetDatabases() []Database {
-	return c.databases
+	return c.Databases
 }
 
 // GetPrometheusPushgateway returns the prometheus pushgateway url
@@ -69,7 +69,7 @@ func (c *Config) LoadDatabase(databases ...string) error {
 		if err := env.ParseWithOptions(db, opt); err != nil {
 			return fmt.Errorf("error loading database configuration. %s: %w", name, err)
 		}
-		c.databases = append(c.databases, *db)
+		c.Databases = append(c.Databases, *db)
 	}
 
 	return nil
