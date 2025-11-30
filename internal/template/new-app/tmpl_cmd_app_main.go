@@ -59,7 +59,7 @@ package infrastructure
 
 type builder struct{}
 
-// New creates a new instance of builder for infrastructure
+// NewRepository creates a new instance of builder for infrastructure
 func NewRepository() *builder {
 	return &builder{}
 }
