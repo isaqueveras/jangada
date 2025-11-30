@@ -56,13 +56,14 @@ air:
 
 clean:
 	@echo "> Cleaning project..."
-	go clean
-	rm -rf ./bin
+	@go clean
+	@rm -rf ./bin
 
 test:
 	@echo "> Running tests..."
-	go test -coverprofile=coverage.out ./...
-	go tool cover -html=coverage.out -o coverage.html
+	@go test -coverprofile=coverage.out ./...
+	@sed -i '/_templ\.go/d' coverage.out
+	@go tool cover -html=coverage.out -o coverage.html
 
 build: clean test
 	@echo "> Building project..."
