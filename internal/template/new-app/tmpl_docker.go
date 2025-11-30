@@ -46,10 +46,10 @@ scrape_configs:
       - targets: ["pushgateway:9091"]`
 
 const tmplDockerCompose = `services:
-  postgres:
+  {{ ToLower .AppName }}_postgres:
     image: postgres:15
     restart: no
-    container_name: postgres
+    container_name: {{ ToLower .AppName }}_postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -67,26 +67,28 @@ const tmplDockerCompose = `services:
     networks:
       - monitor
 
-  app:
+  {{ ToLower .AppName }}_app:
     build:
       context: .
       dockerfile: ./Dockerfile.app
-    container_name: app
+    container_name: {{ ToLower .AppName }}_app
     ports:
       - "{{ .DefaultHost }}:{{ .DefaultHost }}"
 		environment:
       - CGO_ENABLED=0
-      - {{ ToUpper .AppName }}_DATABASE_HOST=postgres
-    env_file: .env
+      - {{ ToUpper .AppName }}_DATABASE_HOST={{ ToLower .AppName }}_postgres
+			- APP_ADDRESS={{ .DefaultHost }}
+    env_file:
+      - .env
     restart: no
     depends_on:
-      - postgres
+      - {{ ToLower .AppName }}_postgres
     networks:
       - monitor
 
-  prometheus:
+  {{ ToLower .AppName }}_prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
+    container_name: {{ ToLower .AppName }}_prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -95,18 +97,18 @@ const tmplDockerCompose = `services:
     networks:
       - monitor
 
-  pushgateway:
+  {{ ToLower .AppName }}_pushgateway:
     image: prom/pushgateway:latest
-    container_name: pushgateway
+    container_name: {{ ToLower .AppName }}_pushgateway
     ports:
       - "9091:9091"
     restart: no
     networks:
       - monitor
 
-  grafana:
+  {{ ToLower .AppName }}_grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: {{ ToLower .AppName }}_grafana
     ports:
       - "3000:3000"
     environment:
