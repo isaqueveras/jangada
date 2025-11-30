@@ -81,7 +81,21 @@ lint:
 
 # --------------- Docker Tools ---------------
 
-DOCKER_COMMAND :=	docker compose -p {{ ToLower .AppName }} -f ./docker/docker-compose.yml
+DOCKER_COMMAND :=	docker compose -p {{ ToLower .AppName }} -f docker-compose.yml
+
+docker-dev: 
+	@echo "> 🐳 Run development server"
+	@$(DOCKER_COMMAND) up {{ ToLower .AppName }}_postgres {{ ToLower .AppName }}_app
+
+docker-app:
+	@echo "> 🐳 Start app service"
+	@$(DOCKER_COMMAND) up {{ ToLower .AppName }}_app
+
+docker-database:
+	@echo "> 🐳 Start database service"
+	@$(DOCKER_COMMAND) up {{ ToLower .AppName }}_postgres
+
+# Docker commands
 
 docker-up:
 	@echo "> 🐳 Builds, (re)creates, starts, and attaches to containers for a service..."
@@ -118,7 +132,7 @@ docker-logs:
 docker-clean:
 	@echo "> 🐳 Remove orphaned containers, volumes, and images...."
 	@$(DOCKER_COMMAND) down -v
-	docker system prune -f
+	@docker system prune -f
 `
 
 const tmplGitIgnore string = `db/*.db
