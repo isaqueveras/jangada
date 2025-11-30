@@ -6,6 +6,7 @@ var Template = map[string]string{
 	"go.mod":             tmplGoMod,         // contains module of the app
 	".air.toml":          tmplAirToml,       // contains air.toml of the app
 	".gitignore":         tmplGitIgnore,     // contains gitignore of the app
+	".dockerignore":      tmplDockerIgnore,  // contains dockerignore of the app
 	".env":               tmplEnv,           // contains env of the app
 	".env.example":       tmplEnv,           // contains env of example of the app
 	"Makefile":           tmplMakefile,      // contains makefile of the app
@@ -14,6 +15,9 @@ var Template = map[string]string{
 	"prometheus.yml":     tmplPrometheus,    // contains prometheus config of the app
 	"docker-compose.yml": tmplDockerCompose, // contains docker compose of the app
 	"database.sql":       "",                // contains database seed of the app
+
+	"coverage.html": "",
+	"coverage.out":  "",
 
 	"core/core.go": tmplCoreCore, // contains core of the app
 
@@ -25,8 +29,6 @@ var Template = map[string]string{
 	"pkg/database/pool.go":              serviceDatabasePoolTemp,
 	"pkg/database/transaction.go":       serviceDatabaseTransactionTemp,
 	"pkg/database/postgres/postgres.go": serviceDatabasePostgresTemp,
-	"pkg/database/seeds/seeds.go":       serviceDatabaseSeedsTemp,
-	"pkg/database/migrations/.keep":     "",
 
 	"cmd/app/main.go": tmplAppMain, // contains main of the app
 
