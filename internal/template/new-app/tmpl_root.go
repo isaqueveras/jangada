@@ -101,10 +101,6 @@ docker-up:
 	@echo "> 🐳 Builds, (re)creates, starts, and attaches to containers for a service..."
 	@$(DOCKER_COMMAND) up
 
-docker-up-database:
-	@echo "> 🐳 Start database service"
-	@$(DOCKER_COMMAND) up pg_{{ ToLower .AppName }}
-
 docker-down:
 	@echo "> 🐳 Stops containers and removes containers, networks, volumes, and images..."
 	@$(DOCKER_COMMAND) down
@@ -135,12 +131,22 @@ docker-clean:
 	@docker system prune -f
 `
 
-const tmplGitIgnore string = `db/*.db
-bin/
+const tmplGitIgnore string = `bin/
 tmp/
 
 *_templ.go
 .env`
+
+const tmplDockerIgnore string = `.air.toml
+.coverage.*
+Makefile
+README.md
+bin/
+tmp/
+.env
+.env.example
+.gitignore
+database.sql`
 
 const tmplEnv string = `# ================== APPICATION ==================
 
