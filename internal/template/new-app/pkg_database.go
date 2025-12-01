@@ -168,6 +168,7 @@ import (
 )
 
 const roSuffix = "_ro"
+const defaultDatabase = "{{ ToLower .AppName }}"
 
 type poolDatabase struct {
 	pool map[string]Database
@@ -208,7 +209,7 @@ func (p *poolDatabase) CloseConnections() {
 
 // NewTransaction starts a new transaction in the database
 func (p *poolDatabase) NewTransaction(ctx context.Context, readonly bool, database ...string) (Transaction, error) {
-	databaseName := "{{ ToUpper .AppName }}"
+	databaseName := defaultDatabase
 	if len(database) > 0 {
 		databaseName = database[0]
 	}
