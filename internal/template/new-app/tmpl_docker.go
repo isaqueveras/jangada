@@ -4,11 +4,11 @@ const tmplDockerfile = `FROM golang:1.24 AS builder
 
 WORKDIR /app
 
-COPY ../go.mod ../go.sum ./
+COPY go.mod go.sum ./
 
 RUN go mod download
 
-COPY ../ ./
+COPY . ./
 
 RUN go build -o app ./cmd/app
 
@@ -51,13 +51,12 @@ const tmplDockerCompose = `services:
     restart: no
     container_name: {{ ToLower .AppName }}_postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: {{ ToLower .AppName }}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB={{ ToLower .AppName }}
     ports:
       - "5432:5432"
     volumes:
-      - ./database.sql:/docker-entrypoint-initdb.d/init.sql
       - {{ ToLower .AppName }}_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -74,10 +73,10 @@ const tmplDockerCompose = `services:
     container_name: {{ ToLower .AppName }}_app
     ports:
       - "{{ .DefaultHost }}:{{ .DefaultHost }}"
-		environment:
+    environment:
       - CGO_ENABLED=0
       - {{ ToUpper .AppName }}_DATABASE_HOST={{ ToLower .AppName }}_postgres
-			- APP_ADDRESS={{ .DefaultHost }}
+      - APP_ADDRESS={{ .DefaultHost }}
     env_file:
       - .env
     restart: no
