@@ -13,11 +13,7 @@
 ## Features
 
 - DDD-based structure: `application`, `domain`, `transport`, `infrastructure` and `tests`
-- Plugin system via CLI
 - Background jobs and chained workflows
-- Integrations with Postgres, Gin, Synk, and more
-- Simple YAML configuration
-- Middleware and helpers for logging and request tracing
 
 ---
 
@@ -32,10 +28,10 @@ go install github.com/isaqueveras/jangada@latest
 Create the foundation of an application to build a monolithic or microservice
 
 ```bash
-$ jangada new mercadolivre
+$ jangada new commerce
 
 # or configure the base with the flags
-$ jangada new mercadolivre --mod=github.com/isaqueveras/mercadolivre --host=localhost:8782 --db=postgres
+$ jangada new commerce --mod=github.com/isaqueveras/commerce --host=localhost:8782 --db=postgres
 ```
 
 ## Create a domain layer

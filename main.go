@@ -1,7 +1,12 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 
 	cli "github.com/isaqueveras/jangada/internal"
 	newapp "github.com/isaqueveras/jangada/internal/new-app"
@@ -10,6 +15,11 @@ import (
 )
 
 func main() {
+	_, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	go gracefullyStop(cancel)
+
 	dirBase, _ := filepath.Abs("")
 
 	cli.Init(dirBase)
@@ -28,11 +38,11 @@ func main() {
 		Use:     "new [name]",
 		Short:   "Create a new app",
 		Args:    cobra.ExactArgs(1),
-		Example: "jangada new myapp --mod=github.com/username/myapp --db=postgres",
+		Example: "jangada new myapp --mod=github.com/username/myapp --db=postgres --host=localhost:8081",
 		Run:     newapp.Execute,
 	}
 
-	commandNew.Flags().String("host", ":8080", "--host=localhost:8080")
+	commandNew.Flags().String("host", "localhost:8080", "--host=localhost:8080")
 	commandNew.Flags().String("mod", "", "--mod=github.com/username/myapp")
 	commandNew.Flags().String("db", "postgres", "--db=postgres")
 
@@ -95,4 +105,20 @@ func main() {
 
 	root.AddCommand(commandNew, commandSail)
 	root.Execute()
+}
+
+func gracefullyStop(cancel context.CancelFunc) {
+	stop := make(chan os.Signal, 2)
+	defer close(stop)
+
+	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+	defer signal.Stop(stop)
+
+	<-stop
+	cancel()
+
+	fmt.Fprintln(os.Stdout, "\ninterrupt received, wait for exit or ^C to terminate")
+	<-stop
+
+	os.Exit(1)
 }

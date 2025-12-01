@@ -6,22 +6,30 @@ package config
 import (
 	"fmt"
 	"net/url"
-	"os"
+	"strings"
 
 	"github.com/caarlos0/env/v11"
-	"gopkg.in/yaml.v3"
 )
 
-const (
-	configAppFile      = "config/app.yaml"
-	configDatabaseFile = "config/database.yaml"
-)
+// NewConfig returns a new config
+func NewConfig() (*Config, error) {
+	cfg := &Config{}
+	if err := env.Parse(cfg); err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}
 
 // Config represents the application configuration
 type Config struct {
-	Environment string      ` + "`env:\"ENVIRONMENT,required\" envDefault:\"development\"`" + `
-	App         Application ` + "`yaml:\"app\"`" + `
-	Databases   []Database  ` + "`yaml:\"databases\"`" + `
+	Environment string ` + "`env:\"ENVIRONMENT,required\" envDefault:\"development\"`" + `
+	App         Application
+	Databases   []Database
+}
+
+// GetApplication returns the application configuration
+func (c *Config) GetApplication() Application {
+	return c.App
 }
 
 // IsProduction returns true if the environment is production
@@ -44,30 +52,55 @@ func (c *Config) GetDatabases() []Database {
 	return c.Databases
 }
 
+// GetPrometheusPushgateway returns the prometheus pushgateway url
+func (a Application) GetPrometheusPushgateway() string {
+	return a.prometheusPushgateway
+}
+
+// LoadDatabase loads the databases configuration for the current environment
+func (c *Config) LoadDatabase(databases ...string) error {
+	if len(databases) == 0 {
+		return fmt.Errorf("no databases provided")
+	}
+
+	for _, name := range databases {
+		db := &Database{}
+		opt := env.Options{Prefix: fmt.Sprintf("%s_", strings.ToUpper(name))}
+		if err := env.ParseWithOptions(db, opt); err != nil {
+			return fmt.Errorf("error loading database configuration. %s: %w", name, err)
+		}
+		c.Databases = append(c.Databases, *db)
+	}
+
+	return nil
+}
+
 // Application represents the application settings
 type Application struct {
-	Name        string ` + "`yaml:\"name\"`" + `
-	Description string ` + "`yaml:\"description\"`" + `
-	Address     string ` + "`yaml:\"address\" env:\"APP_ADDRESS\"`" + `
-	Version     string ` + "`yaml:\"version\" env:\"APP_VERSION\"`" + `
-	Debug       bool   ` + "`yaml:\"debug\" env:\"APP_DEBUG\"`" + `
+	Name        string ` + "`env:\"APP_NAME\"`" + `
+	Description string ` + "`env:\"APP_DESCRIPTION\"`" + `
+	Address     string ` + "`env:\"APP_ADDRESS\"`" + `
+	Version     string ` + "`env:\"APP_VERSION\"`" + `
+	Debug       bool   ` + "`env:\"APP_DEBUG\"`" + `
+
+	prometheusPushgateway string ` + "`env:\"PROMETHEUS_PUSHGATEWAY\"`" + `
 }
 
 // Database represents the database connection settings
 type Database struct {
-	Nick               string      ` + "`yaml:\"nick\" env:\"DB_NICK\"`" + `
-	Name               string      ` + "`yaml:\"name\" env:\"DB_NAME\"`" + `
-	Username           string      ` + "`yaml:\"username\" env:\"DB_USER\"`" + `
-	Password           string      ` + "`yaml:\"password\" env:\"DB_PASS\"`" + `
-	Host               string      ` + "`yaml:\"hostname\" env:\"DB_HOST\"`" + `
-	Port               string      ` + "`yaml:\"port\" env:\"DB_PORT\"`" + `
-	MaxConn            int         ` + "`yaml:\"max_conn\" env:\"DB_MAX_CONN\"`" + `
-	MaxIdle            int         ` + "`yaml:\"max_idle\" env:\"DB_MAX_IDLE\"`" + `
-	ReadOnly           bool        ` + "`yaml:\"read_only\" env:\"DB_READ_ONLY\"`" + `
-	Main               bool        ` + "`yaml:\"main\" env:\"DB_MAIN\"`" + `
-	TransactionTimeout int         ` + "`yaml:\"transaction_timeout\" env:\"DB_TIMEOUT\"`" + `
-	SSLMode            string      ` + "`yaml:\"ssl_mode\" env:\"DB_SSL_MODE\"`" + `
-	SSLClient          Certificate ` + "`yaml:\"ssl_client\"`" + `
+	Nick               string      ` + "`env:\"DATABASE_NICK\"`" + `
+	Name               string      ` + "`env:\"DATABASE_NAME\"`" + `
+	Username           string      ` + "`env:\"DATABASE_USER\"`" + `
+	Password           string      ` + "`env:\"DATABASE_PASS\"`" + `
+	Host               string      ` + "`env:\"DATABASE_HOST\"`" + `
+	Port               string      ` + "`env:\"DATABASE_PORT\"`" + `
+	MaxConn            int         ` + "`env:\"DATABASE_MAX_CONN\"`" + `
+	MaxIdle            int         ` + "`env:\"DATABASE_MAX_IDLE\"`" + `
+	ReadOnly           bool        ` + "`env:\"DATABASE_READ_ONLY\"`" + `
+	Main               bool        ` + "`env:\"DATABASE_MAIN\"`" + `
+	TransactionTimeout int         ` + "`env:\"DATABASE_TIMEOUT\"`" + `
+	SSLMode            string      ` + "`env:\"DATABASE_SSL_MODE\"`" + `
+	SSLClient          Certificate
 }
 
 // String returns the database connection string
@@ -100,58 +133,8 @@ func (d Database) String() string {
 
 // Certificate represents the SSL certificate settings
 type Certificate struct {
-	Certificate          string ` + "`yaml:\"path_cert\" env:\"DB_SSL_CERT\"`" + `
-	PrivateKey           string ` + "`yaml:\"path_key\" env:\"DB_SSL_KEY\"`" + `
-	CertificateAuthority string ` + "`yaml:\"path_ca\" env:\"DB_SSL_CA\"`" + `
-}
-
-// NewConfig returns a new config
-func NewConfig() (cfg *Config, err error) {
-	cfg = &Config{Environment: "development"}
-
-	if err := env.Parse(cfg); err != nil {
-		return nil, fmt.Errorf("error loading env: %w", err)
-	}
-
-	if cfg.App, err = load[Application](configAppFile, cfg.Environment); err != nil {
-		return nil, err
-	}
-
-	if cfg.Databases, err = load[[]Database](configDatabaseFile, cfg.Environment); err != nil {
-		return nil, err
-	}
-
-	for i := range cfg.Databases {
-		if err := env.Parse(&cfg.Databases[i]); err != nil {
-			return nil, fmt.Errorf("error loading env for db %d: %w", i, err)
-		}
-	}
-
-	return cfg, nil
-}
-
-// load loads the configuration from a file
-func load[T any](path string, env string) (T, error) {
-	type block[T any] map[string]T
-
-	var (
-		cfg  T
-		data block[T]
-	)
-
-	b, err := os.ReadFile(path)
-	if err != nil {
-		return cfg, err
-	}
-
-	if err := yaml.Unmarshal(b, &data); err != nil {
-		return cfg, err
-	}
-
-	if cfg, ok := data[env]; ok {
-		return cfg, nil
-	}
-
-	return cfg, fmt.Errorf("environment configuration %s not found in file %s", env, path)
+	Certificate          string ` + "`env:\"DATABASE_SSL_CERT\"`" + `
+	PrivateKey           string ` + "`env:\"DATABASE_SSL_KEY\"`" + `
+	CertificateAuthority string ` + "`env:\"DATABASE_SSL_CA\"`" + `
 }
 `

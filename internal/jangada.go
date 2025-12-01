@@ -138,8 +138,13 @@ func CreateFile(path, tmpl string) {
 	}
 	defer file.Close()
 
+	funcs := template.FuncMap{
+		"ToUpper": strings.ToUpper,
+		"ToLower": strings.ToLower,
+	}
+
 	var t *template.Template
-	if t, err = template.New(cfg.dirBase).Parse(tmpl); err != nil {
+	if t, err = template.New(cfg.dirBase).Funcs(funcs).Parse(tmpl); err != nil {
 		panic(err)
 	}
 

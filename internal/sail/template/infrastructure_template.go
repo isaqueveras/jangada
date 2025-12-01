@@ -24,16 +24,23 @@ func NewRepository(tx database.Transaction) *repository {
 const InfrastructurePostgresData = `// Package postgres contains the implementation of the {{ ToLower .Entity }} repository
 package postgres
 
-import "{{ .Module }}/pkg/database"
+import (
+	"context"
 
-// Postgres is the implementation of the {{ ToLower .Entity }} repository
+	"{{ .Module }}/pkg/database"
+
+	"github.com/Masterminds/squirrel"
+)
+
+// Postgres is the implementation of repository
 type Postgres struct {
-	db database.Transaction
+	db      database.Transaction
+	builder squirrel.StatementBuilderType
 }
 
-// NewPostgres returns a new instance of the {{ ToLower .Entity }} Postgres
+// NewPostgres returns a new instance of postgres
 func NewPostgres(db database.Transaction) *Postgres {
-	return &Postgres{db: db}
+	return &Postgres{db: db, builder: squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar)}
 }
 `
 

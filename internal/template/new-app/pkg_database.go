@@ -163,26 +163,27 @@ import (
 	"context"
 	"errors"
 
-	"{{ .ModuleName }}/config"
+	"{{ .ModuleName }}/core"
 	"{{ .ModuleName }}/pkg/database/postgres"
 )
 
 const roSuffix = "_ro"
+const defaultDatabase = "{{ ToLower .AppName }}"
 
 type poolDatabase struct {
 	pool map[string]Database
 }
 
 // NewConnectionPool creates a new connection pool with the given databases
-func NewConnectionPool(databases ...config.Database) ConnectionPool {
-	pool := make(map[string]Database)
-
+func NewConnectionPool(core *core.Core) ConnectionPool {
+	databases := core.Config().GetDatabases()
 	if len(databases) == 1 {
 		databaseRO := databases[0]
 		databaseRO.ReadOnly = true
 		databases = append(databases, databaseRO)
 	}
 
+	pool := make(map[string]Database)
 	for _, db := range databases {
 		name := db.Nick
 		if db.ReadOnly {
@@ -191,7 +192,8 @@ func NewConnectionPool(databases ...config.Database) ConnectionPool {
 
 		pool[name] = postgres.NewPostgres()
 		if err := pool[name].Open(context.Background(), &db); err != nil {
-			panic(err)
+			core.Log().Error("error opening database", "name", name, "error", err)
+			continue
 		}
 	}
 
@@ -207,7 +209,7 @@ func (p *poolDatabase) CloseConnections() {
 
 // NewTransaction starts a new transaction in the database
 func (p *poolDatabase) NewTransaction(ctx context.Context, readonly bool, database ...string) (Transaction, error) {
-	databaseName := "default"
+	databaseName := defaultDatabase
 	if len(database) > 0 {
 		databaseName = database[0]
 	}
