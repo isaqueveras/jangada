@@ -22,6 +22,7 @@ func Execute(cmd *cobra.Command, args []string) {
 
 	cli.SetAppName(args[0])
 	cli.SetDefaultHost(cmd.Flag("host").Value.String())
+	cli.SetDefaultPort(cmd.Flag("port").Value.String())
 	cli.SetDatabase(cmd.Flag("db").Value.String())
 	cli.SetModuleName(cmd.Flag("mod").Value.String())
 

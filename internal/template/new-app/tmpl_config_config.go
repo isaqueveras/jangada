@@ -52,11 +52,6 @@ func (c *Config) GetDatabases() []Database {
 	return c.Databases
 }
 
-// GetPrometheusPushgateway returns the prometheus pushgateway url
-func (a Application) GetPrometheusPushgateway() string {
-	return a.prometheusPushgateway
-}
-
 // LoadDatabase loads the databases configuration for the current environment
 func (c *Config) LoadDatabase(databases ...string) error {
 	if len(databases) == 0 {
@@ -83,7 +78,12 @@ type Application struct {
 	Version     string ` + "`env:\"APP_VERSION\"`" + `
 	Debug       bool   ` + "`env:\"APP_DEBUG\"`" + `
 
-	prometheusPushgateway string ` + "`env:\"PROMETHEUS_PUSHGATEWAY\"`" + `
+	PrometheusPushgateway string ` + "`env:\"PROMETHEUS_PUSHGATEWAY\"`" + `
+}
+
+// GetPrometheusPushgateway returns the prometheus pushgateway url
+func (a Application) GetPrometheusPushgateway() string {
+	return a.PrometheusPushgateway
 }
 
 // Database represents the database connection settings
