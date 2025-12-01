@@ -42,7 +42,8 @@ func main() {
 		Run:     newapp.Execute,
 	}
 
-	commandNew.Flags().String("host", "localhost:8080", "--host=localhost:8080")
+	commandNew.Flags().String("host", "localhost", "--host=localhost")
+	commandNew.Flags().String("port", "8080", "--port=8080")
 	commandNew.Flags().String("mod", "", "--mod=github.com/username/myapp")
 	commandNew.Flags().String("db", "postgres", "--db=postgres")
 

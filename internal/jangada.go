@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/fatih/color"
@@ -20,10 +21,12 @@ func GetConfig() *Jangada {
 
 // Jangada ...
 type Jangada struct {
-	AppName     string
-	ModuleName  string
+	AppName    string
+	ModuleName string
+	Database   string
+
 	DefaultHost string
-	Database    string
+	DefaultPort string
 
 	dirBase       string
 	DirectoryPath string
@@ -88,6 +91,14 @@ func SetDefaultHost(host string) {
 		return
 	}
 	cfg.DefaultHost = host
+}
+
+// SetDefaultPort set the default port
+func SetDefaultPort(port string) {
+	if port == "" {
+		return
+	}
+	cfg.DefaultPort = OnlyNumbers(port)
 }
 
 func GetDirBase() string {
@@ -164,3 +175,8 @@ func SetTransportFlagMethodName(method string) { cfg.TransportInfo.FlagMethodNam
 
 // SetApplicationFlagService set the transport layer
 func SetApplicationFlagService(service string) { cfg.ApplicationInfo.FlagService = service }
+
+// OnlyNumbers returns only numbers
+func OnlyNumbers(n string) string {
+	return strings.Join(regexp.MustCompile(`\d`).FindAllString(n, -1), "")
+}

@@ -157,10 +157,10 @@ ENVIRONMENT=development # development|testing|production
 APP_NAME={{ ToLower .AppName }}
 
 # APP_DESCRIPTION -> defines the system description
-APP_DESCRIPTION="description of the application"
+APP_DESCRIPTION="Application built with Jangada Framework"
 
 # APP_ADDRESS -> defines the address where the application will be executed
-APP_ADDRESS={{ .DefaultHost }}
+APP_ADDRESS={{ .DefaultHost }}:{{ .DefaultPort }}
 
 # APP_VERSION -> defines the version of the application that is running
 APP_VERSION=v0.0.0

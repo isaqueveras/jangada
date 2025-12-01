@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY --from=builder /app/app .
 
-EXPOSE {{ .DefaultHost }}
+EXPOSE {{ .DefaultPort }}
 
 ENTRYPOINT ["./app"]`
 
@@ -38,7 +38,7 @@ scrape_configs:
   - job_name: {{ ToLower .AppName }}
     scrape_interval: 10s
     static_configs:
-      - targets: ["{{ ToLower .AppName }}_app:{{ .DefaultHost }}"]
+      - targets: ["{{ ToLower .AppName }}_app:{{ .DefaultPort }}"]
 
   - job_name: pushgateway
     scrape_interval: 10s
@@ -72,11 +72,11 @@ const tmplDockerCompose = `services:
       dockerfile: ./Dockerfile.app
     container_name: {{ ToLower .AppName }}_app
     ports:
-      - "{{ .DefaultHost }}:{{ .DefaultHost }}"
+      - "{{ .DefaultPort }}:{{ .DefaultPort }}"
     environment:
       - CGO_ENABLED=0
       - {{ ToUpper .AppName }}_DATABASE_HOST={{ ToLower .AppName }}_postgres
-      - APP_ADDRESS={{ .DefaultHost }}
+      - APP_ADDRESS=:{{ .DefaultPort }}
     env_file:
       - .env
     restart: no
