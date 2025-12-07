@@ -30,7 +30,7 @@ func Execute(cmd *cobra.Command, args []string) {
 	createRootFiles()
 	gitInit()
 
-	generateTemplate()
+	cli.GenerateTemplate()
 	execGoModTidy()
 	copyStaticFiles()
 
@@ -64,19 +64,6 @@ func gitInit() {
 	log.Add(color.Bold, color.FgHiBlue).Print("\nInitializing git repository\n\n")
 	log.Add(color.FgHiGreen).Print("\trun\t")
 	log.Add(color.Reset).Println("git init")
-}
-
-func generateTemplate() {
-	log := color.New()
-	log.Add(color.Bold, color.FgHiBlue).Print("\nGenerating template...\n\n")
-	log.Add(color.FgHiGreen).Print("\trun\t")
-	log.Add(color.Reset).Println(`go run github.com/a-h/templ/cmd/templ@latest generate`)
-
-	command := exec.Command("bash", "-c", "go run github.com/a-h/templ/cmd/templ@latest generate")
-	command.Stdout, command.Stderr = os.Stdout, os.Stderr
-	if err := command.Run(); err != nil {
-		panic(err)
-	}
 }
 
 func execGoModTidy() {

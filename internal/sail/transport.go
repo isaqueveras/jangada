@@ -84,23 +84,26 @@ func createTransport(st *SailTransport) {
 	)
 
 	// command: jangada sail transport order/pay --layer=rest
-	createStructureController := (cfg.TransportInfo.FlagMethodName == "" && st.layer == restTransportLayer)
+	createStructureControllerRest := (cfg.TransportInfo.FlagMethodName == "" && st.layer == restTransportLayer)
+
+	// command: jangada sail transport order/pay --layer=web
+	createStructureControllerWeb := (cfg.TransportInfo.FlagMethodName == "" && st.layer == webTransportLayer)
 
 	// command: jangada sail transport order/pay --name=SavePayment --layer={rest}
 	createMethodController := (cfg.TransportInfo.FlagMethodName != "")
 
 	switch {
-	case createStructureController:
-		err = createFileForTemplate(data, transportTemplateRest)
-
+	case createStructureControllerWeb:
+		err = createFileForTemplate(data, transportTemplateWeb, cli.GenerateTemplate)
+	case createStructureControllerRest:
+		err = createFileForTemplate(data, transportTemplateRest, nil)
 	case createMethodController:
 		switch st.layer {
 		case restTransportLayer:
-			err = createFileForTemplate(data, transportTemplateRest)
+			err = createFileForTemplate(data, transportTemplateRest, nil)
 		default:
 			err = errors.New("only rest transport layer is supported")
 		}
-
 	default:
 		err = errors.New("transport layer not implemented")
 	}
@@ -111,7 +114,7 @@ func createTransport(st *SailTransport) {
 	}
 }
 
-func createFileForTemplate(data *info, templates []Template) error {
+func createFileForTemplate(data *info, templates []Template, after func()) error {
 	for _, in := range templates {
 		pathFile, err := createPath(in.path, data)
 		if err != nil {
@@ -141,6 +144,10 @@ func createFileForTemplate(data *info, templates []Template) error {
 
 		log.Add(color.Reset, color.FgHiGreen, color.Bold).Print("- [created]\t")
 		log.Add(color.Reset, color.FgHiWhite).Printf("%s\n", pathFile)
+	}
+
+	if after != nil {
+		after()
 	}
 
 	return nil

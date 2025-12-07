@@ -17,7 +17,7 @@ func Application(cmd *cobra.Command, args []string) {
 
 	folder, entity := getFolderAndEntityToTransport(args...)
 	info := &info{Folder: folder, Entity: entity, Module: cli.GetModuleName()}
-	if err := createFileForTemplate(info, applicationTemplate); err != nil {
+	if err := createFileForTemplate(info, applicationTemplate, nil); err != nil {
 		cmd.PrintErrln(err)
 	}
 }
