@@ -35,5 +35,14 @@ var infrastructureTemplate = []Template{
 var transportTemplateRest = []Template{
 	{path: "internal/transport/handler.go", content: template.HandlerController},
 	{path: "internal/transport/rest/handler.go", content: template.HandlerLayerController},
-	{path: "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller.go", content: template.ControllerTemplate, canModify: true},
+	{path: "internal/transport/rest/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller.go", content: template.ControllerTemplateRest, canModify: true},
+}
+
+var transportTemplateWeb = []Template{
+	{path: "core/helpers/view.go", content: template.CoreHelpersView},
+	{path: "internal/transport/handler.go", content: template.HandlerController},
+	{path: "internal/transport/web/handler.go", content: template.HandlerLayerController},
+	{path: "internal/transport/web/{{ ToLower .Folder }}/{{ ToLower .Entity }}/controller.go", content: template.ControllerTemplateWeb, canModify: true},
+	{path: "internal/transport/web/{{ ToLower .Folder }}/{{ ToLower .Entity }}/model.go", content: "package {{ ToLower .Entity }}"},
+	{path: "internal/transport/web/{{ ToLower .Folder }}/{{ ToLower .Entity }}/template.templ", content: template.ControllerTemplateHTMLWeb},
 }

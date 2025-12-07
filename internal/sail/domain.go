@@ -9,7 +9,7 @@ import (
 func Domain(cmd *cobra.Command, args []string) {
 	folder, entity := getFolderAndEntityToTransport(args...)
 	info := &info{Folder: folder, Entity: entity, Module: cli.GetModuleName()}
-	if err := createFileForTemplate(info, domainTemplate); err != nil {
+	if err := createFileForTemplate(info, domainTemplate, nil); err != nil {
 		cmd.PrintErrln(err)
 	}
 }

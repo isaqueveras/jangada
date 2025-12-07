@@ -9,7 +9,7 @@ import (
 func Infrastructure(cmd *cobra.Command, args []string) {
 	folder, entity := getFolderAndEntityToTransport(args...)
 	info := &info{Folder: folder, Entity: entity, Module: cli.GetModuleName()}
-	if err := createFileForTemplate(info, infrastructureTemplate); err != nil {
+	if err := createFileForTemplate(info, infrastructureTemplate, nil); err != nil {
 		cmd.PrintErrln(err)
 	}
 }
