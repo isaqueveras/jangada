@@ -45,11 +45,8 @@ jangada test
 [Docs](https://jangada-framework.com/docs)
 `
 
-const tmplMakefile = `templ:
-	templ generate
-
-dev: templ
-	@go run cmd/app/main.go 
+const tmplMakefile = `dev:
+	templ generate -watch -cmd "go run cmd/app/main.go"
 
 air:
 	air -c .air.toml
